@@ -31,10 +31,15 @@ public class Queue implements Listener {
             Block block = event.getClickedBlock();
             assert block != null;
             if (block.getLocation().getBlockX() == Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignX").getScore() && block.getLocation().getBlockY() == Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignY").getScore() && block.getLocation().getBlockZ() == Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignZ").getScore()) {
+                int i;
+                for (i = 0; i < PlayerList.size(); i++) {
+                    if (PlayerList.get(i).getName().equals(p.getName())) {
+                        PlayerList.remove(i);
+                    }
+                }
                 PlayerList.add(p);
                 p.sendMessage(format("&aDu bist nun in der Warteschlange!"));
                 if (PlayerList.size() >= Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TeamSize").getScore() * 2) {
-                    int i;
                     int GameDataNumber = -1;
                     for (i = 0; i < main.getGameManager().getGameDataList().size(); i++) {
                         if (main.getGameManager().getGameDataList().get(i).getGamestate() == 1) {

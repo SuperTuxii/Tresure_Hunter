@@ -28,7 +28,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rBullet"));
-        itemMeta.setLore(Collections.singletonList(format("&r&dAmmonition für den Revolver")));
+        itemMeta.setLore(Collections.singletonList(format("&r&dAmmunition für den Revolver")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
         
@@ -64,7 +64,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rMultirevive"));
-        itemMeta.setLore(Collections.singletonList("&r&dBelebt alle Toten des Teams wieder"));
+        itemMeta.setLore(Collections.singletonList(format("&r&dBelebt alle Toten des Teams wieder")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
@@ -76,7 +76,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rCoin"));
-        itemMeta.setLore(Collections.singletonList("&r&dUsed to buy items in shops"));
+        itemMeta.setLore(Collections.singletonList(format("&r&dUsed to buy items in shops")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
@@ -88,7 +88,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rCoin"));
-        itemMeta.setLore(Collections.singletonList("&r&dUsed to buy items in shops"));
+        itemMeta.setLore(Collections.singletonList(format("&r&dUsed to buy items in shops")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
@@ -100,7 +100,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&r&6Treasure"));
-        itemMeta.setLore(Collections.singletonList("&r&dVery heavy"));
+        itemMeta.setLore(Collections.singletonList(format("&r&dVery heavy")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 

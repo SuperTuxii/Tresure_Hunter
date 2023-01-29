@@ -320,24 +320,6 @@ public class PreGameManager implements Listener {
         }
     }
 
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getInventory().getHolder() instanceof ChoosingHolder) {
-            int i;
-            int i2;
-            for (i = 0; i < gameManager.getGameDataList().size(); i++) {
-                if (gameManager.getGameDataList().get(i).getGamestate() == 2) {
-                    for (i2 = 0; i2 < gameManager.getGameDataList().get(i).getPlayerList().size(); i2++) {
-                        if (gameManager.getGameDataList().get(i).getPlayerList().get(i2).getName().equals(event.getPlayer().getName())) {
-                            Player p = (Player) event.getPlayer();
-                            p.openInventory(getMapChoosingInv(0, i));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public String format(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
