@@ -159,7 +159,6 @@ public class setupCommand implements CommandExecutor {
 
     public void MainHelp(Player p) {
         p.sendMessage(format("&e---------&f Help: Setup &e-------------------\n&7Below is a list of all Setup commands:"));
-        p.sendMessage(format("&e/setup scoreboard: &fsetup commands for scoreboard"));
         p.sendMessage(format("&e/setup treasure hunter: &fsetup commands for treasure hunter minigame"));
     }
 

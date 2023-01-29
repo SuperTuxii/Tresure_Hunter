@@ -133,7 +133,7 @@ public class GameManager implements Listener {
             p.getInventory().setBoots(Item);
         }
 
-        for (i = 0; true; i++) {
+        for (i = 1; true; i++) {
             if (!Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + i + "X").isScoreSet()) {
                 i--;
                 break;
@@ -144,7 +144,7 @@ public class GameManager implements Listener {
         if (i < Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureAmount").getScore()) {
             GameDataList.get(GameDataNumber).getTreasureNumberList().clear();
             for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getPlayerList().size(); i2++) {
-                GameDataList.get(GameDataNumber).getPlayerList().get(i).sendMessage(format("&cERROR: Not Enough Treasure Spawnpoints for this Map! Please report this Error!"));
+                GameDataList.get(GameDataNumber).getPlayerList().get(i2).sendMessage(format("&cERROR: Not Enough Treasure Spawnpoints for this Map! Please report this Error!"));
             }
             for (i2 = 1; i2 <= i; i2++) {
                 GameDataList.get(GameDataNumber).getTreasureNumberList().add(i2);
@@ -597,6 +597,26 @@ public class GameManager implements Listener {
                 }
             }
         }.runTaskTimer(main, 0L, 20L);
+    }
+
+    public void Restart(int GameDataNumber) {
+        int i;
+        GameData gameData = GameDataList.get(GameDataNumber);
+        gameData.setGamestate(1);
+        for (i = 0; i < gameData.getCorpseList().size(); i++) {
+            gameData.getCorpseList().get(i).removeTexture();
+        }
+        for (i = 0; i < gameData.getPlayerList().size(); i++) {
+            gameData.getPlayerList().get(i).removeScoreboardTag("dead");
+            gameData.getPlayerList().get(i).getInventory().clear();
+        }
+        for (i = 0; i < gameData.getTreasureNumberList().size(); i++) {
+            int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "X").getScore();
+            int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "Y").getScore();
+            int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "Z").getScore();
+            Objects.requireNonNull(Bukkit.getWorld("Map" + gameData.getSelectedMapNumber())).getBlockAt(x, y, z).setType(Material.AIR);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill @e[tag=treasure_texture]");
+        }
     }
 
     public void Shutdown() {

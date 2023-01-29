@@ -1,5 +1,6 @@
 package treasure_hunter.treasure_hunter;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,6 +32,7 @@ public class Queue implements Listener {
             assert block != null;
             if (block.getLocation().getBlockX() == Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignX").getScore() && block.getLocation().getBlockY() == Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignY").getScore() && block.getLocation().getBlockZ() == Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignZ").getScore()) {
                 PlayerList.add(p);
+                p.sendMessage(format("&aDu bist nun in der Warteschlange!"));
                 if (PlayerList.size() >= Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TeamSize").getScore() * 2) {
                     int i;
                     int GameDataNumber = -1;
@@ -90,5 +92,9 @@ public class Queue implements Listener {
                 }
             }
         }.runTaskTimer(main, 0L, 1L);
+    }
+
+    public String format(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

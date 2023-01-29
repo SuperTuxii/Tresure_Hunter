@@ -12,7 +12,6 @@ import treasure_hunter.treasure_hunter.Commands.acceptJoinCommand;
 import treasure_hunter.treasure_hunter.Commands.leaveCommand;
 import treasure_hunter.treasure_hunter.Commands.setupCommand;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public final class Treasure_Hunter extends JavaPlugin {
@@ -21,7 +20,7 @@ public final class Treasure_Hunter extends JavaPlugin {
     private final leaveCommand leaveCommand = new leaveCommand(this);
     private final setupCommand setupCommand = new setupCommand(this);
     private final Queue queue = new Queue(this);
-    private final GameManager gameManager = new GameManager(this);
+    private GameManager gameManager;
     private final MapManager mapManager = new MapManager(this);
 
 
@@ -30,9 +29,10 @@ public final class Treasure_Hunter extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        createScoreboards();
+        gameManager = new GameManager(this);
         registerCommands();
         registerEvents();
-        createScoreboards();
         createWorlds();
     }
 

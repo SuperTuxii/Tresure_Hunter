@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -111,7 +112,7 @@ public class PreGameManager implements Listener {
     }
 
     public Inventory getMapChoosingInv(int time_in_seconds, int GameDataNumber) {
-        Inventory inventory = Bukkit.createInventory(null, 27, "MapChoosing--------------" + time_in_seconds);
+        Inventory inventory = Bukkit.createInventory(new ChoosingHolder(), 27, "MapChoosing--------------" + time_in_seconds);
         inventory.setItem(0, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
         inventory.setItem(1, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
         inventory.setItem(2, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
@@ -143,13 +144,20 @@ public class PreGameManager implements Listener {
     }
 
     public ItemStack getMapItem(int MapNumber, int GameDataNumber, int Map) {
+        int Map1 = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
+        int Map2 = gameManager.getGameDataList().get(GameDataNumber).getMap2List().size();
+        int Map3 = gameManager.getGameDataList().get(GameDataNumber).getMap3List().size();
+        if (Map1 == 0) Map1++;
+        if (Map2 == 0) Map2++;
+        if (Map3 == 0) Map3++;
+
         ItemStack MapItem;
         if (Map == 1) {
-            MapItem = new ItemStack(Material.PAPER, gameManager.getGameDataList().get(GameDataNumber).getMap1List().size());
+            MapItem = new ItemStack(Material.PAPER, Map1);
         }else if (Map == 2) {
-            MapItem = new ItemStack(Material.PAPER, gameManager.getGameDataList().get(GameDataNumber).getMap2List().size());
+            MapItem = new ItemStack(Material.PAPER, Map2);
         }else {
-            MapItem = new ItemStack(Material.PAPER, gameManager.getGameDataList().get(GameDataNumber).getMap3List().size());
+            MapItem = new ItemStack(Material.PAPER, Map3);
         }
         ItemMeta MapItemMeta = MapItem.getItemMeta();
         assert MapItemMeta != null;
@@ -160,13 +168,20 @@ public class PreGameManager implements Listener {
     }
 
     public ItemStack getMapItemInvisible(int MapNumber, int GameDataNumber, int Map) {
+        int Map1 = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
+        int Map2 = gameManager.getGameDataList().get(GameDataNumber).getMap2List().size();
+        int Map3 = gameManager.getGameDataList().get(GameDataNumber).getMap3List().size();
+        if (Map1 == 0) Map1++;
+        if (Map2 == 0) Map2++;
+        if (Map3 == 0) Map3++;
+
         ItemStack MapItem;
         if (Map == 1) {
-            MapItem = new ItemStack(Material.PAPER, gameManager.getGameDataList().get(GameDataNumber).getMap1List().size());
+            MapItem = new ItemStack(Material.PAPER, Map1);
         }else if (Map == 2) {
-            MapItem = new ItemStack(Material.PAPER, gameManager.getGameDataList().get(GameDataNumber).getMap2List().size());
+            MapItem = new ItemStack(Material.PAPER, Map2);
         }else {
-            MapItem = new ItemStack(Material.PAPER, gameManager.getGameDataList().get(GameDataNumber).getMap3List().size());
+            MapItem = new ItemStack(Material.PAPER, Map3);
         }
         ItemMeta MapItemMeta = MapItem.getItemMeta();
         assert MapItemMeta != null;
@@ -298,6 +313,24 @@ public class PreGameManager implements Listener {
                             gameManager.getGameDataList().get(i).getMap2List().add(p.getName());
                         }else if (event.getSlot() == 6 || event.getSlot() == 7 || event.getSlot() == 8 || event.getSlot() == 15 || event.getSlot() == 16 || event.getSlot() == 17 || event.getSlot() == 24 || event.getSlot() == 25 || event.getSlot() == 26) {
                             gameManager.getGameDataList().get(i).getMap3List().add(p.getName());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getInventory().getHolder() instanceof ChoosingHolder) {
+            int i;
+            int i2;
+            for (i = 0; i < gameManager.getGameDataList().size(); i++) {
+                if (gameManager.getGameDataList().get(i).getGamestate() == 2) {
+                    for (i2 = 0; i2 < gameManager.getGameDataList().get(i).getPlayerList().size(); i2++) {
+                        if (gameManager.getGameDataList().get(i).getPlayerList().get(i2).getName().equals(event.getPlayer().getName())) {
+                            Player p = (Player) event.getPlayer();
+                            p.openInventory(getMapChoosingInv(0, i));
                         }
                     }
                 }
