@@ -1,0 +1,19 @@
+name: Treasure_Hunter
+version: '${project.version}'
+main: treasure_hunter.treasure_hunter.Treasure_Hunter
+api-version: 1.16
+authors: [ SuperTuxi ]
+description: Caribien Plugin for Treasure Hunter
+commands:
+  acceptJoin:
+    description: Accept joining a game
+    usage: /<command>
+  leave:
+    description: Leave a game or queue
+    usage: /<command>
+    aliases:
+      - l
+      - lobby
+  setup:
+    description: Setup for certain server functions
+    usage: /<command>
