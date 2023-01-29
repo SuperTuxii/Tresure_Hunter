@@ -158,7 +158,8 @@ public class GameManager implements Listener {
         while (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + i + "X").isScoreSet()) {
             i++;
         }
-        System.out.println(i);
+        i--;
+        System.out.println("I" + i);
 
         int i2;
         if (i < Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureAmount").getScore()) {
@@ -195,8 +196,8 @@ public class GameManager implements Listener {
             int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Z").getScore();
             Objects.requireNonNull(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber())).getBlockAt(x, y, z).setType(Material.BARRIER);
             assert world != null;
-            world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
-                /*entity.setFacingDirection(BlockFace.UP, true);
+            /*world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
+                entity.setFacingDirection(BlockFace.UP, true);
                 ItemStack item = new ItemStack(Material.CHEST);
                 ItemMeta meta = item.getItemMeta();
                 assert meta != null;
@@ -206,8 +207,15 @@ public class GameManager implements Listener {
                 entity.setItemDropChance(0.0f);
                 entity.setFixed(true);
                 entity.setVisible(false);
-                entity.addScoreboardTag("treasure_texture");*/
-            });
+                entity.addScoreboardTag("treasure_texture");
+            });*/
+        }
+
+        System.out.println("TNS" + GameDataList.get(GameDataNumber).getTreasureNumberList().size());
+        System.out.println("TSS" + GameDataList.get(GameDataNumber).getTreasureStatusList().size());
+        for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
+            System.out.println("TNSG" + i2 + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2));
+            System.out.println("TSSG" + i2 + GameDataList.get(GameDataNumber).getTreasureStatusList().get(i2));
         }
 
         new BukkitRunnable() {
@@ -603,7 +611,7 @@ public class GameManager implements Listener {
 
     public void spawnBoat(Location location, Player p, int time, int GameDataNumber) {
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute at " + p.getName() + " run setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
         location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
 
 

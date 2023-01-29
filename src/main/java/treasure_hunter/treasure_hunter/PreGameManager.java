@@ -62,7 +62,9 @@ public class PreGameManager implements Listener {
                     int i;
                     for (i = 0; i < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); i++) {
                         Player p = gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(i);
-                        p.openInventory(getMapChoosingInv(number, GameDataNumber));
+                        if (!(p.getOpenInventory().getTopInventory().getHolder() instanceof ChoosingHolder)) {
+                            p.openInventory(getMapChoosingInv(number, GameDataNumber));
+                        }
                     }
                 }else {
                     int Map1Size = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
