@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -159,7 +160,6 @@ public class GameManager implements Listener {
             i++;
         }
         i--;
-        System.out.println("I" + i);
 
         int i2;
         if (i < Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureAmount").getScore()) {
@@ -190,14 +190,25 @@ public class GameManager implements Listener {
 
         for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
             GameDataList.get(GameDataNumber).getTreasureStatusList().add(true);
+        }
+
+        for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
             World world = Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber());
             int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "X").getScore();
             int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Y").getScore();
             int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Z").getScore();
-            Objects.requireNonNull(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber())).getBlockAt(x, y, z).setType(Material.BARRIER);
+            int r = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "R").getScore();
             assert world != null;
-            /*world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
+            Entity texture = world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
                 entity.setFacingDirection(BlockFace.UP, true);
+                if (r == 0) entity.setRotation(Rotation.NONE);
+                else if (r == 1) entity.setRotation(Rotation.CLOCKWISE_45);
+                else if (r == 2) entity.setRotation(Rotation.CLOCKWISE);
+                else if (r == 3) entity.setRotation(Rotation.CLOCKWISE_135);
+                else if (r == 4) entity.setRotation(Rotation.FLIPPED);
+                else if (r == 5) entity.setRotation(Rotation.FLIPPED_45);
+                else if (r == 6) entity.setRotation(Rotation.COUNTER_CLOCKWISE);
+                else if (r == 7) entity.setRotation(Rotation.COUNTER_CLOCKWISE_45);
                 ItemStack item = new ItemStack(Material.CHEST);
                 ItemMeta meta = item.getItemMeta();
                 assert meta != null;
@@ -208,14 +219,8 @@ public class GameManager implements Listener {
                 entity.setFixed(true);
                 entity.setVisible(false);
                 entity.addScoreboardTag("treasure_texture");
-            });*/
-        }
-
-        System.out.println("TNS" + GameDataList.get(GameDataNumber).getTreasureNumberList().size());
-        System.out.println("TSS" + GameDataList.get(GameDataNumber).getTreasureStatusList().size());
-        for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
-            System.out.println("TNSG" + i2 + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2));
-            System.out.println("TSSG" + i2 + GameDataList.get(GameDataNumber).getTreasureStatusList().get(i2));
+            });
+            Objects.requireNonNull(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber())).getBlockAt(x, y, z).setType(Material.BARRIER);
         }
 
         new BukkitRunnable() {
@@ -596,6 +601,7 @@ public class GameManager implements Listener {
                     int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Y").getScore();
                     int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Z").getScore();
                     p.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in map" + gameData.getSelectedMapNumber() + " positioned " + x + " " + y + " " + z + " run kill @e[distance=1,type=minecraft:item_frame,limit=1,sort=nearest,tag=treasure_texture]");
                     HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getTreasure());
                     if (!remainingItems.isEmpty()) {
                         for (i = 0; i < remainingItems.size(); i++) {

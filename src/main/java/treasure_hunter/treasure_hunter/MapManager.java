@@ -66,13 +66,14 @@ public class MapManager {
         }
     }
 
-    public void setTreasureSpawn(int MapNumber, int TreasureNumber, int x, int y, int z, Player p) {
+    public void setTreasureSpawn(int MapNumber, int TreasureNumber, int x, int y, int z, int r, Player p) {
         if (p != null) {
             p.sendMessage(format("&aTreasure Spawnpoint " + TreasureNumber + " set to " + x + " " + y + " " + z));
         }
         Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "TreasureSpawn" + TreasureNumber + "X").setScore(x);
         Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "TreasureSpawn" + TreasureNumber + "Y").setScore(y);
         Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "TreasureSpawn" + TreasureNumber + "Z").setScore(z);
+        Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "TreasureSpawn" + TreasureNumber + "R").setScore(r);
     }
 
     public void setShopSpawn(int MapNumber, int ShopNumber, int x, int y, int z, Player p) {

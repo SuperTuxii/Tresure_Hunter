@@ -138,8 +138,8 @@ public class setupCommand implements CommandExecutor {
                             main.getMapManager().setSpawn(Integer.parseInt(args[3]), true, Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), p);
                         }else if (args[4].equalsIgnoreCase("red") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 10) {
                             main.getMapManager().setSpawn(Integer.parseInt(args[3]), false, Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), p);
-                        }else if (args[4].equalsIgnoreCase("treasure") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 11) {
-                            main.getMapManager().setTreasureSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), p);
+                        }else if (args[4].equalsIgnoreCase("treasure") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 12) {
+                            main.getMapManager().setTreasureSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), Integer.parseInt(args[11]), p);
                         }else if (args[4].equalsIgnoreCase("shop") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 11) {
                             main.getMapManager().setShopSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), p);
                         }
@@ -181,7 +181,7 @@ public class setupCommand implements CommandExecutor {
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> custommodeldata set <CustomModelData>: &fSets the CustomModelData for the preview item for the given Map"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> blue spawn set <x> <y> <z>: &fSets the Spawnpoint for Blue Team"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> red spawn set <x> <y> <z>: &fSets the Spawnpoint for Red Team"));
-        p.sendMessage(format("&e/setup treasure hunter map <Map Number> treasure spawn set <Spawn Number> <x> <y> <z>: &fSets the specific treasure spawnpoint"));
+        p.sendMessage(format("&e/setup treasure hunter map <Map Number> treasure spawn set <Spawn Number> <x> <y> <z> <rotation>: &fSets the specific treasure spawnpoint"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> shop spawn set <Shop Number> <x> <y> <z>: &fSets the specific shop spawnpoint"));
     }
 
