@@ -676,6 +676,7 @@ public class GameManager implements Listener {
         if (event.getEntity() instanceof Arrow) {
             System.out.println("Arrow");
             ((Arrow) event.getEntity()).setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
+            event.getEntity().remove();
         }
     }
 
