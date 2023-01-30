@@ -25,7 +25,7 @@ public class GameData {
     private int SelectedMapNumber = -1;
     private ArrayList<Integer> TreasureNumberList = new ArrayList<>();
     private ArrayList<Boolean> TreasureStatusList = new ArrayList<>();
-    private int SavedTreasure;
+    private int SavedTreasure = 0;
 
     public int getGamestate() {
         return Gamestate;

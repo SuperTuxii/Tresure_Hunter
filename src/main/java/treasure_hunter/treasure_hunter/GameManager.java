@@ -41,7 +41,7 @@ public class GameManager implements Listener {
 
     private final Random random = new Random();
 
-    private ArrayList<GameData> GameDataList = new ArrayList<>();
+    private final ArrayList<GameData> GameDataList = new ArrayList<>();
 
     public void startGame(ArrayList<Player> PlayerList, int GameDataNumber) {
         int i;
@@ -199,7 +199,7 @@ public class GameManager implements Listener {
             int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Z").getScore();
             int r = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "R").getScore();
             assert world != null;
-            Entity texture = world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
+            world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
                 entity.setFacingDirection(BlockFace.UP, true);
                 if (r == 0) entity.setRotation(Rotation.NONE);
                 if (r == 1) entity.setRotation(Rotation.CLOCKWISE_45);
@@ -238,10 +238,15 @@ public class GameManager implements Listener {
 
             @Override
             public void run() {
-                number--;
-                int i;
-                for (i = 0; i < GameDataList.get(GameDataNumber).getCorpseList().size(); i++) {
-                    GameDataList.get(GameDataNumber).getCorpseList().get(i).updatePlayerInventory();
+                if (number > 0) {
+                    int i;
+                    for (i = 0; i < GameDataList.get(GameDataNumber).getCorpseList().size(); i++) {
+                        GameDataList.get(GameDataNumber).getCorpseList().get(i).updatePlayerInventory();
+                    }
+                    checkForEnd(GameDataList.get(GameDataNumber));
+                    number--;
+                }else {
+                    //Timeout Ende
                 }
             }
         }.runTaskTimer(main, 0L, 20L);
@@ -679,13 +684,35 @@ public class GameManager implements Listener {
                         }
                     }
                     int i;
-                    if (GameDataList.get(GameDataNumber).getBluePlayerList().contains(p.getName())) {
-                        for (i = 0; i < GameDataList.get(GameDataNumber).getBluePlayerList().size(); i++) {
-                            Bukkit.getPlayer(GameDataList.get(GameDataNumber).getBluePlayerList().get(i)).sendMessage(format("&9Das Schiff ist abgefahren"));
-                        }
-                    }else {
-                        for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
-                            Bukkit.getPlayer(GameDataList.get(GameDataNumber).getBluePlayerList().get(i)).sendMessage(format("&cDas Schiff ist abgefahren"));
+                    for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
+                        Player p = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getBluePlayerList().get(i));
+                        assert p != null;
+                        p.sendMessage(format("&cDas Schiff ist abgefahren"));
+                        p.playSound(location, Sound.ENTITY_GENERIC_SPLASH, SoundCategory.MASTER, 1000, 1);
+                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 1);
+                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 1);
+                        if (location.getBlockX() - 3 <= p.getLocation().getBlockX() && location.getBlockX() + 3 >= p.getLocation().getBlockX() && location.getBlockY() <= p.getLocation().getBlockY() && location.getBlockY() + 6 >= p.getLocation().getBlockY() && location.getBlockZ() - 9 <= p.getLocation().getBlockZ() && location.getBlockZ() + 7 >= p.getLocation().getBlockZ()) {
+                            p.setGameMode(GameMode.SPECTATOR);
+                            p.addScoreboardTag("shipped");
+                            int treasureamount = 0;
+                            while (p.getInventory().containsAtLeast(itemManager.getTreasure(), 1)) {
+                                int amount = 1;
+                                for (ItemStack invItem : p.getInventory().getContents()) {
+                                    if (invItem != null) {
+                                        if (invItem.isSimilar(itemManager.getTreasure())) {
+                                            int preAmount = invItem.getAmount();
+                                            int newAmount = Math.max(0, preAmount - amount);
+                                            amount = Math.max(0, amount - preAmount);
+                                            invItem.setAmount(newAmount);
+                                            if (amount == 0) {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                treasureamount++;
+                            }
+                            GameDataList.get(GameDataNumber).setSavedTreasure(GameDataList.get(GameDataNumber).getSavedTreasure() + treasureamount);
                         }
                     }
                     cancel();
@@ -701,6 +728,12 @@ public class GameManager implements Listener {
         }
     }
 
+    public void checkForEnd(GameData gameData) {
+        if (!gameData.getTreasureStatusList().contains(true) && gameData.getSavedTreasure() == gameData.getTreasureNumberList().size()) {
+            //Schiff Ende
+        }
+    }
+
     public void Restart(int GameDataNumber) {
         int i;
         GameData gameData = GameDataList.get(GameDataNumber);
@@ -710,6 +743,7 @@ public class GameManager implements Listener {
         }
         for (i = 0; i < gameData.getPlayerList().size(); i++) {
             gameData.getPlayerList().get(i).removeScoreboardTag("dead");
+            gameData.getPlayerList().get(i).removeScoreboardTag("shipped");
             gameData.getPlayerList().get(i).getInventory().clear();
         }
         for (i = 0; i < gameData.getTreasureNumberList().size(); i++) {
@@ -732,6 +766,7 @@ public class GameManager implements Listener {
             }
             for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
                 gameData.getPlayerList().get(i2).removeScoreboardTag("dead");
+                gameData.getPlayerList().get(i2).removeScoreboardTag("shipped");
                 gameData.getPlayerList().get(i2).getInventory().clear();
             }
             for (i2 = 0; i2 < gameData.getTreasureNumberList().size(); i2++) {
