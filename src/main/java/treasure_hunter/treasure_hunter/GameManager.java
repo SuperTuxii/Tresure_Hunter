@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -190,9 +191,6 @@ public class GameManager implements Listener {
 
         for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
             GameDataList.get(GameDataNumber).getTreasureStatusList().add(true);
-        }
-
-        for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
             World world = Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber());
             int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "X").getScore();
             int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Y").getScore();
@@ -220,6 +218,12 @@ public class GameManager implements Listener {
                 entity.setVisible(false);
                 entity.addScoreboardTag("treasure_texture");
             });
+        }
+
+        for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
+            int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "X").getScore();
+            int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Y").getScore();
+            int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2) + "Z").getScore();
             Objects.requireNonNull(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber())).getBlockAt(x, y, z).setType(Material.BARRIER);
         }
 
@@ -516,20 +520,27 @@ public class GameManager implements Listener {
                             int radius = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResRadius").getScore();
                             if (GameDataList.get(i).getCorpseList().get(i3).getPosX() + radius >= p.getLocation().getX() && p.getLocation().getX() >= GameDataList.get(i).getCorpseList().get(i3).getPosX() - radius && GameDataList.get(i).getCorpseList().get(i3).getPosY() + radius >= p.getLocation().getY() && p.getLocation().getY() >= GameDataList.get(i).getCorpseList().get(i3).getPosY() - radius && GameDataList.get(i).getCorpseList().get(i3).getPosZ() + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= GameDataList.get(i).getCorpseList().get(i3).getPosZ() - radius && GameDataList.get(i).getCorpseList().get(i3).isRevivable()) {
                                 if (p.getInventory().getItemInMainHand().isSimilar(itemManager.getMedkit())) {
-                                    GameDataList.get(i).getCorpseList().get(i3).setReviving(true);
-                                    ReviveCorpse(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResTime").getScore(), GameDataList.get(i).getCorpseList().get(i3), p, GameDataList.get(i));
-                                    break;
+                                    if (GameDataList.get(i).getRedPlayerList().contains(GameDataList.get(i).getCorpseList().get(i3).getPlayer().getName()) && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
+                                        GameDataList.get(i).getCorpseList().get(i3).setReviving(true);
+                                        ReviveCorpse(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResTime").getScore(), GameDataList.get(i).getCorpseList().get(i3), p, GameDataList.get(i));
+                                        break;
+                                    }else if (GameDataList.get(i).getBluePlayerList().contains(GameDataList.get(i).getCorpseList().get(i3).getPlayer().getName()) && GameDataList.get(i).getBluePlayerList().contains(p.getName())) {
+                                        GameDataList.get(i).getCorpseList().get(i3).setReviving(true);
+                                        ReviveCorpse(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResTime").getScore(), GameDataList.get(i).getCorpseList().get(i3), p, GameDataList.get(i));
+                                        break;
+                                    }
                                 }
                             }
                         }
                         for (i3 = 0; i3 < GameDataList.get(i).getTreasureNumberList().size(); i3++) {
                             if (GameDataList.get(i).getTreasureStatusList().get(i3)) {
-                                int radius = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResRadius").getScore();
+                                int radius = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureRadius").getScore();
                                 int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(i).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(i).getTreasureNumberList().get(i3) + "X").getScore();
                                 int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(i).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(i).getTreasureNumberList().get(i3) + "Y").getScore();
                                 int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(i).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(i).getTreasureNumberList().get(i3) + "Z").getScore();
-                                if (x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius) {
+                                if (x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
                                     PickupTreasure(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureTime").getScore(), i3, p, GameDataList.get(i));
+                                    break;
                                 }
                             }
                         }
@@ -601,7 +612,7 @@ public class GameManager implements Listener {
                     int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Y").getScore();
                     int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Z").getScore();
                     p.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in map" + gameData.getSelectedMapNumber() + " positioned " + x + " " + y + " " + z + " run kill @e[distance=1,type=minecraft:item_frame,limit=1,sort=nearest,tag=treasure_texture]");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in map" + gameData.getSelectedMapNumber() + " positioned " + x + " " + y + " " + z + " run kill @e[distance=..1,type=minecraft:item_frame,limit=1,sort=nearest,tag=treasure_texture]");
                     HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getTreasure());
                     if (!remainingItems.isEmpty()) {
                         for (i = 0; i < remainingItems.size(); i++) {
@@ -657,6 +668,15 @@ public class GameManager implements Listener {
                 }
             }
         }.runTaskTimer(main, 0L, 20L);
+    }
+
+    @EventHandler
+    public void onArrowHit(ProjectileHitEvent event) {
+        System.out.println("hit");
+        if (event.getEntity() instanceof Arrow) {
+            System.out.println("Arrow");
+            ((Arrow) event.getEntity()).setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
+        }
     }
 
     public void Restart(int GameDataNumber) {
