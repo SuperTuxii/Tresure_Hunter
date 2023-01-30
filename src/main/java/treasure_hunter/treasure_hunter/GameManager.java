@@ -819,6 +819,7 @@ public class GameManager implements Listener {
                     gameData.getPlayerList().get(i).removeScoreboardTag("shipped");
                     gameData.getPlayerList().get(i).getInventory().clear();
                     gameData.getPlayerList().get(i).teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+                    gameData.getPlayerList().get(i).setGameMode(GameMode.SURVIVAL);
                 }
                 for (i = 0; i < gameData.getTreasureNumberList().size(); i++) {
                     int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "X").getScore();
@@ -838,6 +839,7 @@ public class GameManager implements Listener {
                 gameData.setMapNumber1(-1);
                 gameData.setMapNumber2(-1);
                 gameData.setMapNumber3(-1);
+                gameData.setSelectedMapNumber(-1);
                 gameData.getTreasureNumberList().clear();
                 gameData.getTreasureStatusList().clear();
                 gameData.setSavedTreasure(0);
