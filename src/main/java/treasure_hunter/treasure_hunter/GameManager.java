@@ -801,11 +801,16 @@ public class GameManager implements Listener {
 
     public void Restart(GameData gameData) {
         gameData.setGamestate(4);
+        int i;
+        int MapNumber = gameData.getSelectedMapNumber();
+        for (i = 0; i < gameData.getPlayerList().size(); i++) {
+            gameData.getPlayerList().get(i).teleport(new Location(Bukkit.getWorld("Map" + MapNumber), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "BlauSpawnX").getScore(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "BlauSpawnY").getScore(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "BlauSpawnZ").getScore()));
+        }
         new BukkitRunnable() {
             @Override
             public void run() {
+                gameData.setGamestate(5);
                 int i;
-                gameData.setGamestate(1);
                 for (i = 0; i < gameData.getCorpseList().size(); i++) {
                     gameData.getCorpseList().get(i).removeTexture();
                 }
@@ -813,6 +818,7 @@ public class GameManager implements Listener {
                     gameData.getPlayerList().get(i).removeScoreboardTag("dead");
                     gameData.getPlayerList().get(i).removeScoreboardTag("shipped");
                     gameData.getPlayerList().get(i).getInventory().clear();
+                    gameData.getPlayerList().get(i).teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
                 }
                 for (i = 0; i < gameData.getTreasureNumberList().size(); i++) {
                     int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "X").getScore();
@@ -821,6 +827,20 @@ public class GameManager implements Listener {
                     Objects.requireNonNull(Bukkit.getWorld("Map" + gameData.getSelectedMapNumber())).getBlockAt(x, y, z).setType(Material.AIR);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill @e[tag=treasure_texture]");
                 }
+                gameData.setGamestate(1);
+                gameData.getPlayerList().clear();
+                gameData.getRedPlayerList().clear();
+                gameData.getBluePlayerList().clear();
+                gameData.getCorpseList().clear();
+                gameData.getMap1List().clear();
+                gameData.getMap2List().clear();
+                gameData.getMap3List().clear();
+                gameData.setMapNumber1(-1);
+                gameData.setMapNumber2(-1);
+                gameData.setMapNumber3(-1);
+                gameData.getTreasureNumberList().clear();
+                gameData.getTreasureStatusList().clear();
+                gameData.setSavedTreasure(0);
             }
         }.runTaskTimer(main, 200L, 1L);
     }
