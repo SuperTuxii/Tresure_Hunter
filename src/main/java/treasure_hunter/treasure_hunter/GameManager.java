@@ -4,6 +4,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,7 +12,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -76,8 +76,14 @@ public class GameManager implements Listener {
             p.teleport(new Location(Bukkit.getWorld("Map" + MapNumber), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "RotSpawnX").getScore(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "RotSpawnY").getScore(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "RotSpawnZ").getScore()));
             p.getInventory().clear();
             p.setGameMode(GameMode.ADVENTURE);
+            ItemStack Item = new ItemStack(Material.WOODEN_SWORD);
+            ItemMeta itemMeta = Item.getItemMeta();
+            assert itemMeta != null;
+            itemMeta.setUnbreakable(true);
+            Item.setItemMeta(itemMeta);
+            p.getInventory().addItem(Item);
             p.getInventory().addItem(new ItemStack(Material.APPLE, 16));
-            ItemStack Item = new ItemStack(Material.LEATHER_HELMET);
+            Item = new ItemStack(Material.LEATHER_HELMET);
             LeatherArmorMeta ItemMeta = (LeatherArmorMeta) Item.getItemMeta();
             assert ItemMeta != null;
             ItemMeta.setColor(Color.RED);
@@ -105,12 +111,6 @@ public class GameManager implements Listener {
             ItemMeta.setUnbreakable(true);
             Item.setItemMeta(ItemMeta);
             p.getInventory().setBoots(Item);
-            Item = new ItemStack(Material.WOODEN_SWORD);
-            ItemMeta itemMeta = Item.getItemMeta();
-            assert itemMeta != null;
-            itemMeta.setUnbreakable(true);
-            Item.setItemMeta(itemMeta);
-            p.getInventory().addItem(Item);
         }
         for (i = GameDataList.get(GameDataNumber).getPlayerList().size() / 2; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
             Player p = GameDataList.get(GameDataNumber).getPlayerList().get(i);
@@ -119,8 +119,14 @@ public class GameManager implements Listener {
             p.teleport(new Location(Bukkit.getWorld("Map" + MapNumber), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "BlauSpawnX").getScore(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "BlauSpawnY").getScore(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "BlauSpawnZ").getScore()));
             p.getInventory().clear();
             p.setGameMode(GameMode.ADVENTURE);
+            ItemStack Item = new ItemStack(Material.WOODEN_SWORD);
+            ItemMeta itemMeta = Item.getItemMeta();
+            assert itemMeta != null;
+            itemMeta.setUnbreakable(true);
+            Item.setItemMeta(itemMeta);
+            p.getInventory().addItem(Item);
             p.getInventory().addItem(new ItemStack(Material.APPLE, 16));
-            ItemStack Item = new ItemStack(Material.LEATHER_HELMET);
+            Item = new ItemStack(Material.LEATHER_HELMET);
             LeatherArmorMeta ItemMeta = (LeatherArmorMeta) Item.getItemMeta();
             assert ItemMeta != null;
             ItemMeta.setColor(Color.BLUE);
@@ -148,12 +154,6 @@ public class GameManager implements Listener {
             ItemMeta.setUnbreakable(true);
             Item.setItemMeta(ItemMeta);
             p.getInventory().setBoots(Item);
-            Item = new ItemStack(Material.WOODEN_SWORD);
-            ItemMeta itemMeta = Item.getItemMeta();
-            assert itemMeta != null;
-            itemMeta.setUnbreakable(true);
-            Item.setItemMeta(itemMeta);
-            p.getInventory().addItem(Item);
         }
 
         i = 1;
@@ -161,6 +161,8 @@ public class GameManager implements Listener {
             i++;
         }
         i--;
+
+        //System.out.println("I" + i);
 
         int i2;
         if (i < Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureAmount").getScore()) {
@@ -200,13 +202,13 @@ public class GameManager implements Listener {
             Entity texture = world.spawn(new Location(world, x, y, z), ItemFrame.class, entity -> {
                 entity.setFacingDirection(BlockFace.UP, true);
                 if (r == 0) entity.setRotation(Rotation.NONE);
-                else if (r == 1) entity.setRotation(Rotation.CLOCKWISE_45);
-                else if (r == 2) entity.setRotation(Rotation.CLOCKWISE);
-                else if (r == 3) entity.setRotation(Rotation.CLOCKWISE_135);
-                else if (r == 4) entity.setRotation(Rotation.FLIPPED);
-                else if (r == 5) entity.setRotation(Rotation.FLIPPED_45);
-                else if (r == 6) entity.setRotation(Rotation.COUNTER_CLOCKWISE);
-                else if (r == 7) entity.setRotation(Rotation.COUNTER_CLOCKWISE_45);
+                if (r == 1) entity.setRotation(Rotation.CLOCKWISE_45);
+                if (r == 2) entity.setRotation(Rotation.CLOCKWISE);
+                if (r == 3) entity.setRotation(Rotation.CLOCKWISE_135);
+                if (r == 4) entity.setRotation(Rotation.FLIPPED);
+                if (r == 5) entity.setRotation(Rotation.FLIPPED_45);
+                if (r == 6) entity.setRotation(Rotation.COUNTER_CLOCKWISE);
+                if (r == 7) entity.setRotation(Rotation.COUNTER_CLOCKWISE_45);
                 ItemStack item = new ItemStack(Material.CHEST);
                 ItemMeta meta = item.getItemMeta();
                 assert meta != null;
@@ -218,6 +220,9 @@ public class GameManager implements Listener {
                 entity.setVisible(false);
                 entity.addScoreboardTag("treasure_texture");
             });
+            /*System.out.println("TNL" + i2 + GameDataList.get(GameDataNumber).getTreasureNumberList().get(i2));
+            System.out.println("TSL" + i2 + GameDataList.get(GameDataNumber).getTreasureStatusList().get(i2));
+            System.out.println("POS" + i2 + x + " " + y + " " + z + " " + r);*/
         }
 
         for (i2 = 0; i2 < GameDataList.get(GameDataNumber).getTreasureNumberList().size(); i2++) {
@@ -523,11 +528,11 @@ public class GameManager implements Listener {
                                     if (GameDataList.get(i).getRedPlayerList().contains(GameDataList.get(i).getCorpseList().get(i3).getPlayer().getName()) && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
                                         GameDataList.get(i).getCorpseList().get(i3).setReviving(true);
                                         ReviveCorpse(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResTime").getScore(), GameDataList.get(i).getCorpseList().get(i3), p, GameDataList.get(i));
-                                        break;
+                                        return;
                                     }else if (GameDataList.get(i).getBluePlayerList().contains(GameDataList.get(i).getCorpseList().get(i3).getPlayer().getName()) && GameDataList.get(i).getBluePlayerList().contains(p.getName())) {
                                         GameDataList.get(i).getCorpseList().get(i3).setReviving(true);
                                         ReviveCorpse(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ResTime").getScore(), GameDataList.get(i).getCorpseList().get(i3), p, GameDataList.get(i));
-                                        break;
+                                        return;
                                     }
                                 }
                             }
@@ -539,8 +544,9 @@ public class GameManager implements Listener {
                                 int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(i).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(i).getTreasureNumberList().get(i3) + "Y").getScore();
                                 int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(i).getSelectedMapNumber() + "TreasureSpawn" + GameDataList.get(i).getTreasureNumberList().get(i3) + "Z").getScore();
                                 if (x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
+                                    System.out.println("Picking up Treasure");
                                     PickupTreasure(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureTime").getScore(), i3, p, GameDataList.get(i));
-                                    break;
+                                    return;
                                 }
                             }
                         }
@@ -599,18 +605,35 @@ public class GameManager implements Listener {
             @Override
             public void run() {
                 if (number > 0) {
-                    if (!p.isSneaking() && !gameData.getTreasureStatusList().get(TreasureNumber)) {
-                        cancel();
-                    }
-                    number--;
-                }else {
-                    if (!p.isSneaking() && !gameData.getTreasureStatusList().get(TreasureNumber)) {
-                        cancel();
-                    }
-                    int i;
+                    int radius = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureRadius").getScore();
                     int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "X").getScore();
                     int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Y").getScore();
                     int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Z").getScore();
+                    if (!(x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius)) {
+                        System.out.println("Player to far away");
+                        cancel();
+                    }
+                    if (!p.isSneaking() || !gameData.getTreasureStatusList().get(TreasureNumber)) {
+                        System.out.println("Player stopped sneaking");
+                        cancel();
+                    }
+                    BlockData BlockData = p.getWorld().getBlockAt(x, y - 1, z).getType().createBlockData();
+                    p.spawnParticle(Particle.BLOCK_DUST, new Location(p.getWorld(), x + 0.5, y + 0.1, z + 0.5), 100, BlockData);
+                    number--;
+                }else {
+                    int radius = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureRadius").getScore();
+                    int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "X").getScore();
+                    int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Y").getScore();
+                    int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Z").getScore();
+                    if (!(x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius)) {
+                        System.out.println("Player to far away");
+                        cancel();
+                    }
+                    if (!p.isSneaking() || !gameData.getTreasureStatusList().get(TreasureNumber)) {
+                        System.out.println("Player stopped sneaking");
+                        cancel();
+                    }
+                    int i;
                     p.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in map" + gameData.getSelectedMapNumber() + " positioned " + x + " " + y + " " + z + " run kill @e[distance=..1,type=minecraft:item_frame,limit=1,sort=nearest,tag=treasure_texture]");
                     HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getTreasure());
@@ -630,6 +653,7 @@ public class GameManager implements Listener {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute at " + p.getName() + " run setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
         location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
+        p.teleport(location);
 
 
         new BukkitRunnable() {
@@ -672,10 +696,7 @@ public class GameManager implements Listener {
 
     @EventHandler
     public void onArrowHit(ProjectileHitEvent event) {
-        System.out.println("hit");
         if (event.getEntity() instanceof Arrow) {
-            System.out.println("Arrow");
-            ((Arrow) event.getEntity()).setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
             event.getEntity().remove();
         }
     }

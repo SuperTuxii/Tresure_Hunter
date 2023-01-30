@@ -25,6 +25,7 @@ public class GameData {
     private int SelectedMapNumber = -1;
     private ArrayList<Integer> TreasureNumberList = new ArrayList<>();
     private ArrayList<Boolean> TreasureStatusList = new ArrayList<>();
+    private int SavedTreasure;
 
     public int getGamestate() {
         return Gamestate;
@@ -68,7 +69,10 @@ public class GameData {
     public ArrayList<Corpse> getCorpseList() {
         return CorpseList;
     }
-    
+    public int getSavedTreasure() {
+        return SavedTreasure;
+    }
+
     public void setGamestate(int gamestate) {
         Gamestate = gamestate;
     }
@@ -83,5 +87,8 @@ public class GameData {
     }
     public void setSelectedMapNumber(int selectedMapNumber) {
         SelectedMapNumber = selectedMapNumber;
+    }
+    public void setSavedTreasure(int savedTreasure) {
+        SavedTreasure = savedTreasure;
     }
 }
