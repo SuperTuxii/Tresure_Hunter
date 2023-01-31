@@ -48,6 +48,7 @@ public final class Treasure_Hunter extends JavaPlugin {
         Objects.requireNonNull(getCommand("acceptJoin")).setExecutor(acceptJoinCommand);
         Objects.requireNonNull(getCommand("leave")).setExecutor(leaveCommand);
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
+        Objects.requireNonNull(getCommand("all")).setExecutor(allCommand);
     }
 
     public void registerEvents() {
