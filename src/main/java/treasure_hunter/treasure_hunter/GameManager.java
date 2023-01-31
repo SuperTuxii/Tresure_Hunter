@@ -15,10 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -918,7 +915,10 @@ public class GameManager implements Listener {
             public void run() {
                 if (number != time) {
                     if (number == 2) {
-                        p.playSound(location, Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 1000, 0.25f);
+                        int i;
+                        for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
+                            p.playSound(location, Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 1000, 0.25f);
+                        }
                     }
                     bar.setProgress((1 / time) * number);
                     number++;
@@ -1228,6 +1228,38 @@ public class GameManager implements Listener {
             }
         }
         ResetPlayer(p);
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        event.setCancelled(true);
+        Player p = event.getPlayer();
+        int i;
+        int i2;
+        int i3;
+        for (i = 0; i < GameDataList.size(); i++) {
+            for (i2 = 0; i2 < GameDataList.get(i2).getPlayerList().size(); i2++) {
+                if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
+                    if (GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
+                        for (i3 = 0; i3 < GameDataList.get(i).getRedPlayerList().size(); i3++) {
+                            Player pS = Bukkit.getPlayerExact(GameDataList.get(i).getRedPlayerList().get(i3));
+                            if (pS != null) {
+                                pS.sendMessage(format("&c[Team] &f<" + p.getName() + "> " + event.getMessage()));
+                            }
+                        }
+                    }else {
+                        for (i3 = 0; i3 < GameDataList.get(i).getBluePlayerList().size(); i3++) {
+                            Player pS = Bukkit.getPlayerExact(GameDataList.get(i).getBluePlayerList().get(i3));
+                            if (pS != null) {
+                                pS.sendMessage(format("&9[Team] &f<" + p.getName() + "> " + event.getMessage()));
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+        p.sendMessage(format("&cDu bist nicht in einem Spiel"));
     }
 
     public BossBar createBossbar(String name, BarColor color, BarStyle style) {
