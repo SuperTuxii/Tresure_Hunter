@@ -584,46 +584,39 @@ public class GameManager implements Listener {
                                                 p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
                                             }
                                         }
-                                        if ((Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() % 5) == 0) {
-                                            if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 5) {
-                                                pD.getInventory().setItem(pD.getInventory().first(Material.WOODEN_SWORD), itemManager.getUnbreakableItem(Material.STONE_SWORD, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 10) {
-                                                pD.getInventory().setItem(pD.getInventory().first(Material.STONE_SWORD), itemManager.getUnbreakableItem(Material.IRON_SWORD, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 15) {
-                                                pD.getInventory().setItem(pD.getInventory().first(Material.IRON_SWORD), itemManager.getUnbreakableItem(Material.GOLDEN_SWORD, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 20) {
-                                                pD.getInventory().setItem(pD.getInventory().first(Material.GOLDEN_SWORD), itemManager.getUnbreakableItem(Material.DIAMOND_SWORD, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 25) {
-                                                pD.getInventory().setItem(pD.getInventory().first(Material.DIAMOND_SWORD), itemManager.getUnbreakableItem(Material.NETHERITE_SWORD, 1));
-                                            }
-                                        }
-                                        if ((Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() & 10) == 0) {
-                                            if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 10) {
-                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.CHAINMAIL_HELMET, 1));
-                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.CHAINMAIL_CHESTPLATE, 1));
-                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.CHAINMAIL_LEGGINGS, 1));
-                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.CHAINMAIL_BOOTS, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 20) {
-                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.IRON_HELMET, 1));
-                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.IRON_CHESTPLATE, 1));
-                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.IRON_LEGGINGS, 1));
-                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.IRON_BOOTS, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 30) {
-                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.GOLDEN_HELMET, 1));
-                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.GOLDEN_CHESTPLATE, 1));
-                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.GOLDEN_LEGGINGS, 1));
-                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.GOLDEN_BOOTS, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 40) {
-                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.DIAMOND_HELMET, 1));
-                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.DIAMOND_CHESTPLATE, 1));
-                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.DIAMOND_LEGGINGS, 1));
-                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.DIAMOND_BOOTS, 1));
-                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 50) {
-                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.NETHERITE_HELMET, 1));
-                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.NETHERITE_CHESTPLATE, 1));
-                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.NETHERITE_LEGGINGS, 1));
-                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.NETHERITE_BOOTS, 1));
-                                            }
+                                        if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 5) {
+                                            pD.getInventory().setItem(pD.getInventory().first(Material.WOODEN_SWORD), itemManager.getUnbreakableItem(Material.STONE_SWORD, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 10) {
+                                            pD.getInventory().setItem(pD.getInventory().first(Material.STONE_SWORD), itemManager.getUnbreakableItem(Material.IRON_SWORD, 1));
+                                            pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.CHAINMAIL_HELMET, 1));
+                                            pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.CHAINMAIL_CHESTPLATE, 1));
+                                            pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.CHAINMAIL_LEGGINGS, 1));
+                                            pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.CHAINMAIL_BOOTS, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 15) {
+                                            pD.getInventory().setItem(pD.getInventory().first(Material.IRON_SWORD), itemManager.getUnbreakableItem(Material.GOLDEN_SWORD, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 20) {
+                                            pD.getInventory().setItem(pD.getInventory().first(Material.GOLDEN_SWORD), itemManager.getUnbreakableItem(Material.DIAMOND_SWORD, 1));
+                                            pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.IRON_HELMET, 1));
+                                            pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.IRON_CHESTPLATE, 1));
+                                            pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.IRON_LEGGINGS, 1));
+                                            pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.IRON_BOOTS, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 25) {
+                                            pD.getInventory().setItem(pD.getInventory().first(Material.DIAMOND_SWORD), itemManager.getUnbreakableItem(Material.NETHERITE_SWORD, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 30) {
+                                            pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.GOLDEN_HELMET, 1));
+                                            pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.GOLDEN_CHESTPLATE, 1));
+                                            pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.GOLDEN_LEGGINGS, 1));
+                                            pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.GOLDEN_BOOTS, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 40) {
+                                            pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.DIAMOND_HELMET, 1));
+                                            pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.DIAMOND_CHESTPLATE, 1));
+                                            pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.DIAMOND_LEGGINGS, 1));
+                                            pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.DIAMOND_BOOTS, 1));
+                                        } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 50) {
+                                            pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.NETHERITE_HELMET, 1));
+                                            pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.NETHERITE_CHESTPLATE, 1));
+                                            pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.NETHERITE_LEGGINGS, 1));
+                                            pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.NETHERITE_BOOTS, 1));
                                         }
                                     }
                                 }
