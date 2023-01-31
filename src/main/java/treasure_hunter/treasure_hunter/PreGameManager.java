@@ -29,12 +29,18 @@ public class PreGameManager implements Listener {
     public void MapChoosing(int GameDataNumber) {
 
         gameManager.getGameDataList().get(GameDataNumber).setGamestate(2);
+        if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+            int pi;
+            for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Gamestate auf 2 gesetzt"));
+            }
+        }
         int[] Maps = choose3randomMaps();
         if (Maps == null) {
             int i;
             for (i = 0; i < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); i++) {
                 Player p = gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(i);
-                p.sendMessage(format("&4ERROR: No vacant Map found! Please report this error!"));
+                p.sendMessage(format("&4ERROR: Keine freie Map gefunden! Diesen Error bitte melden!"));
             }
         }
         assert Maps != null;
@@ -42,14 +48,32 @@ public class PreGameManager implements Listener {
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber1(Maps[0]);
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber2(Maps[0]);
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber3(Maps[0]);
+            if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                int pi;
+                for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                    gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: 1 Map gefunden"));
+                }
+            }
         }else if (Maps[2] == -1) {
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber1(Maps[0]);
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber2(Maps[1]);
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber3(Maps[0]);
+            if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                int pi;
+                for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                    gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: 2 Maps gefunden"));
+                }
+            }
         }else {
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber1(Maps[0]);
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber2(Maps[1]);
             gameManager.getGameDataList().get(GameDataNumber).setMapNumber3(Maps[2]);
+            if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                int pi;
+                for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                    gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: 3 oder mehr Maps gefunden"));
+                }
+            }
         }
 
         new BukkitRunnable() {
@@ -62,11 +86,16 @@ public class PreGameManager implements Listener {
                     int i;
                     for (i = 0; i < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); i++) {
                         Player p = gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(i);
-                        if (!(p.getOpenInventory().getTopInventory().getHolder() instanceof ChoosingHolder)) {
-                            p.openInventory(getMapChoosingInv(number, GameDataNumber));
-                        }
+                        p.openInventory(getMapChoosingInv(number, GameDataNumber));
+                        p.sendMessage(format("&6Debug: Map Wahl Inventory geöffnet"));
                     }
                 }else {
+                    if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                        int pi;
+                        for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                            gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Wahl Ergebniss wird ausgewährtet"));
+                        }
+                    }
                     int Map1Size = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
                     int Map2Size = gameManager.getGameDataList().get(GameDataNumber).getMap2List().size();
                     int Map3Size = gameManager.getGameDataList().get(GameDataNumber).getMap3List().size();

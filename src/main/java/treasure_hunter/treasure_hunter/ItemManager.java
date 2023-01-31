@@ -28,7 +28,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rBullet"));
-        itemMeta.setLore(Collections.singletonList(format("&r&dAmmunition für den Revolver")));
+        itemMeta.setLore(Collections.singletonList(format("&r&dMunition für den Revolver")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
         
@@ -48,11 +48,11 @@ public class ItemManager {
     }
 
     public ItemStack getSchiff() {
-        ItemStack Item = new ItemStack(Material.JUNGLE_BOAT);
+        ItemStack Item = new ItemStack(Material.SPRUCE_BOAT);
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rSchiff"));
-        itemMeta.setLore(Arrays.asList(format("&r&dZum verlassen des Spiels und zum sichern von Schätzen"), format("&r&dZeit bis Schiff bereit ist: " + Objects.requireNonNull(Bukkit.getScoreboardManager().getMainScoreboard().getObjective("CTreasureHunter")).getScore("SchiffReadyTime").getScore())));
+        itemMeta.setLore(Arrays.asList(format("&r&dZum verlassen des Spiels und zum sichern von Schätzen"), format("&r&dZeit bis Schiff abfährt ist: " + Objects.requireNonNull(Bukkit.getScoreboardManager().getMainScoreboard().getObjective("CTreasureHunter")).getScore("SchiffReadyTime").getScore())));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
         
@@ -76,7 +76,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rCoin"));
-        itemMeta.setLore(Collections.singletonList(format("&r&dUsed to buy items in shops")));
+        itemMeta.setLore(Collections.singletonList(format("&r&dZum Kaufen von Items im Shop")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
@@ -88,7 +88,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rCoin"));
-        itemMeta.setLore(Collections.singletonList(format("&r&dUsed to buy items in shops")));
+        itemMeta.setLore(Collections.singletonList(format("&r&dZum Kaufen von Items im Shop")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
@@ -100,7 +100,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&r&6Treasure"));
-        itemMeta.setLore(Collections.singletonList(format("&r&dVery heavy")));
+        itemMeta.setLore(Collections.singletonList(format("&r&dSehr schwer")));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
