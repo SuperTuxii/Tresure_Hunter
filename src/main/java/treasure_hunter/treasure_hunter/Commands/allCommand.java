@@ -33,7 +33,7 @@ public class allCommand implements CommandExecutor {
                                 Message.append(args[1]);
                             }
                             if (pS != null) {
-                                pS.sendMessage(format("&c[All] &f<" + p.getName() + "> " + Message));
+                                pS.sendMessage(format("&a[All] &f<" + p.getName() + "> " + Message));
                             }
                         }
                         return true;
@@ -47,7 +47,7 @@ public class allCommand implements CommandExecutor {
                         Message.append(" ");
                         Message.append(args[1]);
                     }
-                    player.sendMessage(format("&c[All] &f<" + p.getName() + "> " + Message));
+                    player.sendMessage(format("&a[All] &f<" + p.getName() + "> " + Message));
                 }
             }else {
                 p.sendMessage(format("&cDu bist nicht in einem Spiel"));
