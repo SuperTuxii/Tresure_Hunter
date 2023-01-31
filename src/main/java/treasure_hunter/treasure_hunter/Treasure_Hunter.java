@@ -68,6 +68,9 @@ public final class Treasure_Hunter extends JavaPlugin {
         if (mainScoreboard.getObjective("TH_MapNames") == null) {
             mainScoreboard.registerNewObjective("TH_MapNames", "DUMMY", format("&d&lTreasure Hunter Map Names"));
         }
+        if (mainScoreboard.getObjective("Kills") == null) {
+            mainScoreboard.registerNewObjective("Kills", "DUMMY", format("&d&lTreasure Hunter Kills"));
+        }
     }
 
     public void setConfigDefaults() {
@@ -109,24 +112,12 @@ public final class Treasure_Hunter extends JavaPlugin {
         return gameManager;
     }
 
-    public acceptJoinCommand getAcceptJoinCommand() {
-        return acceptJoinCommand;
-    }
-
-    public leaveCommand getLeaveCommand() {
-        return leaveCommand;
-    }
-
     public MapManager getMapManager() {
         return mapManager;
     }
 
     public Queue getQueue() {
         return queue;
-    }
-
-    public setupCommand getSetupCommand() {
-        return setupCommand;
     }
 
     public String format(String message) {

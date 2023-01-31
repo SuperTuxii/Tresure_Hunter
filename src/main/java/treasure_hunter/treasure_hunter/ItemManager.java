@@ -52,7 +52,7 @@ public class ItemManager {
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rSchiff"));
-        itemMeta.setLore(Arrays.asList(format("&r&dZum verlassen des Spiels und zum sichern von Schätzen"), format("&r&dZeit bis Schiff abfährt ist: " + Objects.requireNonNull(Bukkit.getScoreboardManager().getMainScoreboard().getObjective("CTreasureHunter")).getScore("SchiffReadyTime").getScore())));
+        itemMeta.setLore(Arrays.asList(format("&r&dZum verlassen des Spiels und zum sichern von Schätzen"), format("&r&dZeit bis Schiff abfährt ist: " + Objects.requireNonNull(Objects.requireNonNull(Bukkit.getScoreboardManager()).getMainScoreboard().getObjective("CTreasureHunter")).getScore("SchiffReadyTime").getScore())));
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
         
@@ -84,7 +84,7 @@ public class ItemManager {
     }
 
     public ItemStack getCoin() {
-        ItemStack Item = new ItemStack(Material.DIAMOND);
+        ItemStack Item = new ItemStack(Material.DIAMOND, 1);
         ItemMeta itemMeta = Item.getItemMeta();
         assert itemMeta != null;
         itemMeta.setDisplayName(format("&rCoin"));
@@ -104,6 +104,15 @@ public class ItemManager {
         itemMeta.setCustomModelData(1);
         Item.setItemMeta(itemMeta);
 
+        return Item;
+    }
+
+    public ItemStack getUnbreakableItem(Material material, int count) {
+        ItemStack Item = new ItemStack(material, count);
+        ItemMeta ItemMeta = Item.getItemMeta();
+        assert ItemMeta != null;
+        ItemMeta.setUnbreakable(true);
+        Item.setItemMeta(ItemMeta);
         return Item;
     }
     
