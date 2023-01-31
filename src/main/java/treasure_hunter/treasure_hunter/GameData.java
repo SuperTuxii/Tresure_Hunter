@@ -1,5 +1,10 @@
 package treasure_hunter.treasure_hunter;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -26,6 +31,7 @@ public class GameData {
     private ArrayList<Integer> TreasureNumberList = new ArrayList<>();
     private ArrayList<Boolean> TreasureStatusList = new ArrayList<>();
     private int SavedTreasure = 0;
+    BossBar GametimeBar = Bukkit.createBossBar(ChatColor.translateAlternateColorCodes('&', "&a&lSpielzeit"), BarColor.GREEN, BarStyle.SOLID);
 
     public int getGamestate() {
         return Gamestate;
@@ -71,6 +77,9 @@ public class GameData {
     }
     public int getSavedTreasure() {
         return SavedTreasure;
+    }
+    public BossBar getGametimeBar() {
+        return GametimeBar;
     }
 
     public void setGamestate(int gamestate) {

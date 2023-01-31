@@ -5,6 +5,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -124,6 +127,7 @@ public class GameManager implements Listener {
             p.getInventory().setBoots(Item);
             p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
             Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(p.getName()).setScore(0);
+            GameDataList.get(GameDataNumber).getGametimeBar().addPlayer(p);
         }
         for (i = GameDataList.get(GameDataNumber).getPlayerList().size() / 2; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
             Player p = GameDataList.get(GameDataNumber).getPlayerList().get(i);
@@ -164,6 +168,7 @@ public class GameManager implements Listener {
             p.getInventory().setBoots(Item);
             p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
             Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(p.getName()).setScore(0);
+            GameDataList.get(GameDataNumber).getGametimeBar().addPlayer(p);
         }
         if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
             int pi;
@@ -281,6 +286,8 @@ public class GameManager implements Listener {
                         GameDataList.get(GameDataNumber).getCorpseList().get(i).updatePlayerInventory();
                     }
                     checkForEnd(GameDataList.get(GameDataNumber));
+                    double RoundTime = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RoundTime").getScore();
+                    GameDataList.get(GameDataNumber).getGametimeBar().setProgress((1 / RoundTime) * number);
                     number--;
                 }else {
                     int i;
@@ -717,20 +724,25 @@ public class GameManager implements Listener {
         }
     }
 
-    public void ReviveCorpse(int resTime, Corpse corpse, Player p, GameData gameData) {
+    public void ReviveCorpse(double resTime, Corpse corpse, Player p, GameData gameData) {
+        BossBar bar = createBossbar(format("&4Reviving ..."), BarColor.RED, BarStyle.SOLID);
+        bar.addPlayer(p);
         new BukkitRunnable() {
-            int number = resTime;
+            int number = 0;
             @Override
             public void run() {
-                if (number > 0) {
+                if (number != resTime) {
                     if (!p.isSneaking() || !p.getInventory().getItemInMainHand().isSimilar(itemManager.getMedkit()) || !corpse.isRevivable()) {
                         corpse.setReviving(false);
+                        bar.removePlayer(p);
                         cancel();
                     }
-                    number--;
+                    bar.setProgress((1 / resTime) * number);
+                    number++;
                 }else {
                     if (!p.isSneaking() || !p.getInventory().getItemInMainHand().isSimilar(itemManager.getMedkit()) || !corpse.isRevivable()) {
                         corpse.setReviving(false);
+                        bar.removePlayer(p);
                         cancel();
                     }
                     corpse.getPlayer().teleport(corpse.getPosition());
@@ -747,22 +759,25 @@ public class GameManager implements Listener {
                             gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler wiederbelebt"));
                         }
                     }
+                    bar.removePlayer(p);
                     cancel();
                 }
             }
         }.runTaskTimer(main, 0L, 20L);
     }
 
-    public void PickupTreasure(int pickupTime, int TreasureNumber, Player p, GameData gameData) {
+    public void PickupTreasure(double pickupTime, int TreasureNumber, Player p, GameData gameData) {
+        BossBar bar = createBossbar(format("&6Treasure wird ausgegraben ..."), BarColor.YELLOW, BarStyle.SOLID);
+        bar.addPlayer(p);
         new BukkitRunnable() {
-            int number = pickupTime;
+            int number = 0;
             @Override
             public void run() {
                 int radius = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TreasureRadius").getScore();
                 int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "X").getScore();
                 int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Y").getScore();
                 int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(TreasureNumber) + "Z").getScore();
-                if (number > 0) {
+                if (number != pickupTime) {
                     if (!(x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius)) {
                         if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                             int pi;
@@ -770,6 +785,7 @@ public class GameManager implements Listener {
                                 gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler hat sich zu weit von der Treasure entfernt"));
                             }
                         }
+                        bar.removePlayer(p);
                         cancel();
                     }
                     if (!p.isSneaking() || !gameData.getTreasureStatusList().get(TreasureNumber)) {
@@ -779,11 +795,13 @@ public class GameManager implements Listener {
                                 gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler hat aufgehört zu sneaken"));
                             }
                         }
+                        bar.removePlayer(p);
                         cancel();
                     }
                     BlockData BlockData = p.getWorld().getBlockAt(x, y - 1, z).getType().createBlockData();
                     p.spawnParticle(Particle.BLOCK_DUST, new Location(p.getWorld(), x + 0.5, y + 0.1, z + 0.5), 100, BlockData);
-                    number--;
+                    bar.setProgress((1 / pickupTime) * number);
+                    number++;
                 }else {
                     if (!(x + radius >= p.getLocation().getX() && p.getLocation().getX() >= x - radius && y + radius >= p.getLocation().getY() && p.getLocation().getY() >= y - radius && z + radius >= p.getLocation().getZ() && p.getLocation().getZ() >= z - radius)) {
                         if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
@@ -792,6 +810,7 @@ public class GameManager implements Listener {
                                 gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler hat sich zu weit von der Treasure entfernt"));
                             }
                         }
+                        bar.removePlayer(p);
                         cancel();
                     }
                     if (!p.isSneaking() || !gameData.getTreasureStatusList().get(TreasureNumber)) {
@@ -801,6 +820,7 @@ public class GameManager implements Listener {
                                 gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler hat aufgehört zu sneaken"));
                             }
                         }
+                        bar.removePlayer(p);
                         cancel();
                     }
                     int i;
@@ -819,25 +839,39 @@ public class GameManager implements Listener {
                             gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Treasure wurde aufgehoben"));
                         }
                     }
+                    bar.removePlayer(p);
                     cancel();
                 }
             }
         }.runTaskTimer(main, 0L, 20L);
     }
 
-    public void spawnBoat(Location location, Player p, int time, int GameDataNumber) {
+    public void spawnBoat(Location location, Player p, double time, int GameDataNumber) {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute at " + p.getName() + " run setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
         location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
         p.teleport(location.add(0, 1, 0));
 
+        BossBar bar = createBossbar(format("&9Schiff wird vorbereitet ..."), BarColor.BLUE, BarStyle.SOLID);
+        int i;
+        for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
+            Player player = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
+            assert player != null;
+            bar.addPlayer(player);
+        }
+        for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
+            p.playSound(location, Sound.ENTITY_GENERIC_SPLASH, SoundCategory.MASTER, 1000, 1);
+            p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 1);
+            p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 1);
+        }
 
         new BukkitRunnable() {
-            int number = time;
+            int number = 0;
 
             @Override
             public void run() {
-                if (number > 0) {
+                if (number != time) {
+                    bar.setProgress((1 / time) * number);
                     number--;
                 }else {
                     int x;
@@ -858,10 +892,8 @@ public class GameManager implements Listener {
                     for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
                         Player p = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
                         assert p != null;
+                        bar.removePlayer(p);
                         p.sendMessage(format("&cDas Schiff ist abgefahren"));
-                        p.playSound(location, Sound.ENTITY_GENERIC_SPLASH, SoundCategory.MASTER, 1000, 1);
-                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 1);
-                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 1);
                         if (location.getBlockX() - 3 <= p.getLocation().getBlockX() && location.getBlockX() + 3 >= p.getLocation().getBlockX() && location.getBlockY() <= p.getLocation().getBlockY() && location.getBlockY() + 6 >= p.getLocation().getBlockY() && location.getBlockZ() - 9 <= p.getLocation().getBlockZ() && location.getBlockZ() + 7 >= p.getLocation().getBlockZ()) {
                             p.setGameMode(GameMode.SPECTATOR);
                             p.addScoreboardTag("shipped");
@@ -885,6 +917,11 @@ public class GameManager implements Listener {
                             }
                             GameDataList.get(GameDataNumber).setSavedTreasure(GameDataList.get(GameDataNumber).getSavedTreasure() + treasureamount);
                         }
+                    }
+                    for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
+                        p.playSound(location, Sound.ENTITY_GENERIC_SPLASH, SoundCategory.MASTER, 1000, 1);
+                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 1);
+                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 1);
                     }
                     if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                         int pi;
@@ -1050,6 +1087,7 @@ public class GameManager implements Listener {
                     gameData.getPlayerList().get(i).teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
                     gameData.getPlayerList().get(i).setGameMode(GameMode.SURVIVAL);
                     Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(gameData.getPlayerList().get(i).getName()).setScore(0);
+                    gameData.getGametimeBar().removePlayer(gameData.getPlayerList().get(i));
                 }
                 for (i = 0; i < gameData.getTreasureNumberList().size(); i++) {
                     int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "X").getScore();
@@ -1105,6 +1143,10 @@ public class GameManager implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill @e[tag=treasure_texture]");
             }
         }
+    }
+
+    public BossBar createBossbar(String name, BarColor color, BarStyle style) {
+        return Bukkit.createBossBar(name, color, style);
     }
 
     public ArrayList<GameData> getGameDataList() {
