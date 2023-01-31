@@ -1,5 +1,6 @@
 package treasure_hunter.treasure_hunter.Commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,12 @@ public class leaveCommand implements CommandExecutor {
                     i--;
                 }
             }
+            p.sendMessage(format("&aDu wurdest aus der Warteschlange entfernt!"));
         }
         return true;
+    }
+
+    public String format(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }
