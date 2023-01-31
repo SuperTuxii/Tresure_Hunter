@@ -1,7 +1,6 @@
 package treasure_hunter.treasure_hunter;
 
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -18,6 +17,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -63,13 +63,13 @@ public class GameManager implements Listener {
             @Override
             public void run() {
                 if (GameDataList.get(GameDataNumber).getGamestate() == 1) {
-                    preGameManager.MapChoosing(GameDataNumber);
                     if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                         int pi;
                         for (pi = 0; pi < PlayerList.size(); pi++) {
-                            PlayerList.get(pi).sendMessage(format("&6Debug: Map Wahl gestartet"));
+                            PlayerList.get(pi).sendMessage(format("&6Debug: Map Wahl gestartet. State:" + GameDataList.get(GameDataNumber).getGamestate()));
                         }
                     }
+                    preGameManager.MapChoosing(GameDataNumber);
                 }else if (GameDataList.get(GameDataNumber).getGamestate() == 2 && GameDataList.get(GameDataNumber).getSelectedMapNumber() != -1) {
                     startGame(GameDataNumber);
                     if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
@@ -125,7 +125,7 @@ public class GameManager implements Listener {
             ItemMeta.setUnbreakable(true);
             Item.setItemMeta(ItemMeta);
             p.getInventory().setBoots(Item);
-            p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
+            p.setHealth(20);
             Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(p.getName()).setScore(0);
             GameDataList.get(GameDataNumber).getGametimeBar().addPlayer(p);
         }
@@ -166,7 +166,7 @@ public class GameManager implements Listener {
             ItemMeta.setUnbreakable(true);
             Item.setItemMeta(ItemMeta);
             p.getInventory().setBoots(Item);
-            p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
+            p.setHealth(20);
             Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(p.getName()).setScore(0);
             GameDataList.get(GameDataNumber).getGametimeBar().addPlayer(p);
         }
@@ -509,6 +509,10 @@ public class GameManager implements Listener {
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player p = (Player) event.getEntity();
+            if (p.getWorld().getName().equals(Bukkit.getWorlds().get(0).getName())) {
+                event.setCancelled(true);
+                return;
+            }
             int i;
             int i2;
             for (i = 0; i < GameDataList.size(); i++) {
@@ -529,77 +533,100 @@ public class GameManager implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player) {
-            Player p = (Player) event.getEntity();
-            int i;
-            int i2;
-            for (i = 0; i < GameDataList.size(); i++) {
-                for (i2 = 0; i2 < GameDataList.get(i).getPlayerList().size(); i2++) {
-                    if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
-                        if (p.getHealth() - event.getFinalDamage() <= 0) {
-                            if (GameDataList.get(i).getGamestate() == 3) {
-                                if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
-                                    int pi;
-                                    for (pi = 0; pi < getGameDataList().get(i).getPlayerList().size(); pi++) {
-                                        GameDataList.get(i).getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler " + p.getName() + " wurde von " + event.getDamager().getName() + " getötet"));
-                                    }
-                                }
+            if (event.getDamager() instanceof Player || event.getDamager() instanceof Arrow) {
+                Player pD = null;
+                if (event.getDamager() instanceof Player) {
+                    pD = (Player) event.getDamager();
+                } else if (event.getDamager() instanceof Arrow) {
+                    if (((Arrow) event.getDamager()).getShooter() instanceof Player) {
+                        pD = (Player) ((Arrow) event.getDamager()).getShooter();
+                    }
+                }
+                assert pD != null;
+                Player p = (Player) event.getEntity();
+                int i;
+                int i2;
+                for (i = 0; i < GameDataList.size(); i++) {
+                    for (i2 = 0; i2 < GameDataList.get(i).getPlayerList().size(); i2++) {
+                        if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
+                            if (GameDataList.get(i).getGamestate() != 3) {
                                 event.setCancelled(true);
-                                p.addScoreboardTag("dead");
-                                GameDataList.get(i).getCorpseList().add(new Corpse(p.getLocation(), p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ReviveTime").getScore(), GameDataList.get(i).getBluePlayerList().contains(p.getName()), main));
-                                p.setGameMode(GameMode.SPECTATOR);
-                                if (event.getDamager() instanceof Player) {
-                                    Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).setScore(Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() + 1);
-                                    HashMap<Integer, ItemStack> remainingItems = ((Player) event.getDamager()).getInventory().addItem(new ItemStack(Material.BREAD));
-                                    if (!remainingItems.isEmpty()) {
-                                        for (i = 0; i < remainingItems.size(); i++) {
-                                            p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                return;
+                            }
+                            if (GameDataList.get(i).getRedPlayerList().contains(p.getName()) && GameDataList.get(i).getRedPlayerList().contains(pD.getName())) {
+                                event.setCancelled(true);
+                                return;
+                            }
+                            if (GameDataList.get(i).getBluePlayerList().contains(p.getName()) && GameDataList.get(i).getBluePlayerList().contains(pD.getName())) {
+                                event.setCancelled(true);
+                                return;
+                            }
+                            if (p.getHealth() - event.getFinalDamage() <= 0) {
+                                if (GameDataList.get(i).getGamestate() == 3) {
+                                    if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                                        int pi;
+                                        for (pi = 0; pi < getGameDataList().get(i).getPlayerList().size(); pi++) {
+                                            GameDataList.get(i).getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler " + p.getName() + " wurde von " + pD.getName() + " / " + pD.getName() + " getötet"));
                                         }
                                     }
-                                    remainingItems = ((Player) event.getDamager()).getInventory().addItem(itemManager.getCoin());
-                                    if (!remainingItems.isEmpty()) {
-                                        for (i = 0; i < remainingItems.size(); i++) {
-                                            p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                    event.setCancelled(true);
+                                    p.addScoreboardTag("dead");
+                                    GameDataList.get(i).getCorpseList().add(new Corpse(p.getLocation(), p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ReviveTime").getScore(), GameDataList.get(i).getBluePlayerList().contains(p.getName()), main));
+                                    p.setGameMode(GameMode.SPECTATOR);
+                                    if (pD instanceof Player) {
+                                        Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).setScore(Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() + 1);
+                                        HashMap<Integer, ItemStack> remainingItems = pD.getInventory().addItem(new ItemStack(Material.BREAD));
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i = 0; i < remainingItems.size(); i++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
                                         }
-                                    }
-                                    if ((Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() % 5) == 0) {
-                                        if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 5) {
-                                            ((Player) event.getDamager()).getInventory().setItem(((Player) event.getDamager()).getInventory().first(Material.WOODEN_SWORD), itemManager.getUnbreakableItem(Material.STONE_SWORD, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 10) {
-                                            ((Player) event.getDamager()).getInventory().setItem(((Player) event.getDamager()).getInventory().first(Material.STONE_SWORD), itemManager.getUnbreakableItem(Material.IRON_SWORD, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 15) {
-                                            ((Player) event.getDamager()).getInventory().setItem(((Player) event.getDamager()).getInventory().first(Material.IRON_SWORD), itemManager.getUnbreakableItem(Material.GOLDEN_SWORD, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 20) {
-                                            ((Player) event.getDamager()).getInventory().setItem(((Player) event.getDamager()).getInventory().first(Material.GOLDEN_SWORD), itemManager.getUnbreakableItem(Material.DIAMOND_SWORD, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 25) {
-                                            ((Player) event.getDamager()).getInventory().setItem(((Player) event.getDamager()).getInventory().first(Material.DIAMOND_SWORD), itemManager.getUnbreakableItem(Material.NETHERITE_SWORD, 1));
+                                        remainingItems = pD.getInventory().addItem(itemManager.getCoin());
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i = 0; i < remainingItems.size(); i++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
                                         }
-                                    }
-                                    if ((Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() & 10) == 0) {
-                                        if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 10) {
-                                            ((Player) event.getDamager()).getInventory().setHelmet(itemManager.getUnbreakableItem(Material.CHAINMAIL_HELMET, 1));
-                                            ((Player) event.getDamager()).getInventory().setChestplate(itemManager.getUnbreakableItem(Material.CHAINMAIL_CHESTPLATE, 1));
-                                            ((Player) event.getDamager()).getInventory().setLeggings(itemManager.getUnbreakableItem(Material.CHAINMAIL_LEGGINGS, 1));
-                                            ((Player) event.getDamager()).getInventory().setBoots(itemManager.getUnbreakableItem(Material.CHAINMAIL_BOOTS, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 20) {
-                                            ((Player) event.getDamager()).getInventory().setHelmet(itemManager.getUnbreakableItem(Material.IRON_HELMET, 1));
-                                            ((Player) event.getDamager()).getInventory().setChestplate(itemManager.getUnbreakableItem(Material.IRON_CHESTPLATE, 1));
-                                            ((Player) event.getDamager()).getInventory().setLeggings(itemManager.getUnbreakableItem(Material.IRON_LEGGINGS, 1));
-                                            ((Player) event.getDamager()).getInventory().setBoots(itemManager.getUnbreakableItem(Material.IRON_BOOTS, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 30) {
-                                            ((Player) event.getDamager()).getInventory().setHelmet(itemManager.getUnbreakableItem(Material.GOLDEN_HELMET, 1));
-                                            ((Player) event.getDamager()).getInventory().setChestplate(itemManager.getUnbreakableItem(Material.GOLDEN_CHESTPLATE, 1));
-                                            ((Player) event.getDamager()).getInventory().setLeggings(itemManager.getUnbreakableItem(Material.GOLDEN_LEGGINGS, 1));
-                                            ((Player) event.getDamager()).getInventory().setBoots(itemManager.getUnbreakableItem(Material.GOLDEN_BOOTS, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 40) {
-                                            ((Player) event.getDamager()).getInventory().setHelmet(itemManager.getUnbreakableItem(Material.DIAMOND_HELMET, 1));
-                                            ((Player) event.getDamager()).getInventory().setChestplate(itemManager.getUnbreakableItem(Material.DIAMOND_CHESTPLATE, 1));
-                                            ((Player) event.getDamager()).getInventory().setLeggings(itemManager.getUnbreakableItem(Material.DIAMOND_LEGGINGS, 1));
-                                            ((Player) event.getDamager()).getInventory().setBoots(itemManager.getUnbreakableItem(Material.DIAMOND_BOOTS, 1));
-                                        }else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(event.getDamager().getName()).getScore() == 50) {
-                                            ((Player) event.getDamager()).getInventory().setHelmet(itemManager.getUnbreakableItem(Material.NETHERITE_HELMET, 1));
-                                            ((Player) event.getDamager()).getInventory().setChestplate(itemManager.getUnbreakableItem(Material.NETHERITE_CHESTPLATE, 1));
-                                            ((Player) event.getDamager()).getInventory().setLeggings(itemManager.getUnbreakableItem(Material.NETHERITE_LEGGINGS, 1));
-                                            ((Player) event.getDamager()).getInventory().setBoots(itemManager.getUnbreakableItem(Material.NETHERITE_BOOTS, 1));
+                                        if ((Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() % 5) == 0) {
+                                            if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 5) {
+                                                pD.getInventory().setItem(pD.getInventory().first(Material.WOODEN_SWORD), itemManager.getUnbreakableItem(Material.STONE_SWORD, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 10) {
+                                                pD.getInventory().setItem(pD.getInventory().first(Material.STONE_SWORD), itemManager.getUnbreakableItem(Material.IRON_SWORD, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 15) {
+                                                pD.getInventory().setItem(pD.getInventory().first(Material.IRON_SWORD), itemManager.getUnbreakableItem(Material.GOLDEN_SWORD, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 20) {
+                                                pD.getInventory().setItem(pD.getInventory().first(Material.GOLDEN_SWORD), itemManager.getUnbreakableItem(Material.DIAMOND_SWORD, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 25) {
+                                                pD.getInventory().setItem(pD.getInventory().first(Material.DIAMOND_SWORD), itemManager.getUnbreakableItem(Material.NETHERITE_SWORD, 1));
+                                            }
+                                        }
+                                        if ((Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() & 10) == 0) {
+                                            if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 10) {
+                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.CHAINMAIL_HELMET, 1));
+                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.CHAINMAIL_CHESTPLATE, 1));
+                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.CHAINMAIL_LEGGINGS, 1));
+                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.CHAINMAIL_BOOTS, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 20) {
+                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.IRON_HELMET, 1));
+                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.IRON_CHESTPLATE, 1));
+                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.IRON_LEGGINGS, 1));
+                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.IRON_BOOTS, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 30) {
+                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.GOLDEN_HELMET, 1));
+                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.GOLDEN_CHESTPLATE, 1));
+                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.GOLDEN_LEGGINGS, 1));
+                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.GOLDEN_BOOTS, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 40) {
+                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.DIAMOND_HELMET, 1));
+                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.DIAMOND_CHESTPLATE, 1));
+                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.DIAMOND_LEGGINGS, 1));
+                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.DIAMOND_BOOTS, 1));
+                                            } else if (Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(pD.getName()).getScore() == 50) {
+                                                pD.getInventory().setHelmet(itemManager.getUnbreakableItem(Material.NETHERITE_HELMET, 1));
+                                                pD.getInventory().setChestplate(itemManager.getUnbreakableItem(Material.NETHERITE_CHESTPLATE, 1));
+                                                pD.getInventory().setLeggings(itemManager.getUnbreakableItem(Material.NETHERITE_LEGGINGS, 1));
+                                                pD.getInventory().setBoots(itemManager.getUnbreakableItem(Material.NETHERITE_BOOTS, 1));
+                                            }
                                         }
                                     }
                                 }
@@ -623,6 +650,26 @@ public class GameManager implements Listener {
                         }
                     }
                     Player p = (Player) event.getEntity();
+                    p.addScoreboardTag("dead");
+                    gameData.getCorpseList().add(new Corpse(p.getLocation(), p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ReviveTime").getScore(), gameData.getBluePlayerList().contains(p.getName()), main));
+                    p.setGameMode(GameMode.SPECTATOR);
+                }
+                cancel();
+            }
+        }.runTaskTimer(main, 1L, 0L);
+    }
+
+    public void spawnCorpse(Player p, GameData gameData) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!p.getScoreboardTags().contains("dead")) {
+                    if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                        int pi;
+                        for (pi = 0; pi < gameData.getPlayerList().size(); pi++) {
+                            gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Spieler " + p.getName() + "ist gestorben"));
+                        }
+                    }
                     p.addScoreboardTag("dead");
                     gameData.getCorpseList().add(new Corpse(p.getLocation(), p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("ReviveTime").getScore(), gameData.getBluePlayerList().contains(p.getName()), main));
                     p.setGameMode(GameMode.SPECTATOR);
@@ -725,7 +772,7 @@ public class GameManager implements Listener {
     }
 
     public void ReviveCorpse(double resTime, Corpse corpse, Player p, GameData gameData) {
-        BossBar bar = createBossbar(format("&4Reviving ..."), BarColor.RED, BarStyle.SOLID);
+        BossBar bar = createBossbar(format("&4Wiederbeleben ..."), BarColor.RED, BarStyle.SOLID);
         bar.addPlayer(p);
         new BukkitRunnable() {
             int number = 0;
@@ -747,12 +794,12 @@ public class GameManager implements Listener {
                     }
                     corpse.getPlayer().teleport(corpse.getPosition());
                     corpse.getPlayer().setGameMode(GameMode.ADVENTURE);
-                    corpse.getPlayer().setHealth(Objects.requireNonNull(corpse.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue());
+                    corpse.getPlayer().setHealth(20);
                     corpse.getPlayer().removeScoreboardTag("dead");
                     corpse.updatePlayerInventory();
                     corpse.removeTexture();
                     gameData.getCorpseList().remove(corpse);
-                    p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                    p.getInventory().getItemInMainHand().setAmount(p.getInventory().getItemInMainHand().getAmount() - 1);
                     if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                         int pi;
                         for (pi = 0; pi < gameData.getPlayerList().size(); pi++) {
@@ -767,7 +814,7 @@ public class GameManager implements Listener {
     }
 
     public void PickupTreasure(double pickupTime, int TreasureNumber, Player p, GameData gameData) {
-        BossBar bar = createBossbar(format("&6Treasure wird ausgegraben ..."), BarColor.YELLOW, BarStyle.SOLID);
+        BossBar bar = createBossbar(format("&6Ausgraben ..."), BarColor.YELLOW, BarStyle.SOLID);
         bar.addPlayer(p);
         new BukkitRunnable() {
             int number = 0;
@@ -860,9 +907,8 @@ public class GameManager implements Listener {
             bar.addPlayer(player);
         }
         for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-            p.playSound(location, Sound.ENTITY_GENERIC_SPLASH, SoundCategory.MASTER, 1000, 1);
-            p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 1);
-            p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 1);
+            p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 0.1f);
+            p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 2);
         }
 
         new BukkitRunnable() {
@@ -871,8 +917,11 @@ public class GameManager implements Listener {
             @Override
             public void run() {
                 if (number != time) {
+                    if (number == 2) {
+                        p.playSound(location, Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 1000, 0.25f);
+                    }
                     bar.setProgress((1 / time) * number);
-                    number--;
+                    number++;
                 }else {
                     int x;
                     int y;
@@ -919,9 +968,8 @@ public class GameManager implements Listener {
                         }
                     }
                     for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                        p.playSound(location, Sound.ENTITY_GENERIC_SPLASH, SoundCategory.MASTER, 1000, 1);
-                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 1);
-                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 1);
+                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 0.1f);
+                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 2);
                     }
                     if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                         int pi;
@@ -950,16 +998,20 @@ public class GameManager implements Listener {
         int RedTeamOnShip = 0;
         int RedTeamLeftOnShip;
         for (i = 0; i < gameData.getRedPlayerList().size(); i++) {
-            if (!Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead") && !Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
-                RedTeamLeft++;
-            }
-            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
-                RedTeamOnShip++;
+            if (Bukkit.getPlayerExact(gameData.getRedPlayerList().get(i)) != null) {
+                if (!Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead") && !Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
+                    RedTeamLeft++;
+                }
+                if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
+                    RedTeamOnShip++;
+                }
             }
         }
         for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
-            if (!Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead") && !Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
-                BlueTeamLeft++;
+            if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
+                if (!Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead") && !Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
+                    BlueTeamLeft++;
+                }
             }
         }
 
@@ -1081,13 +1133,9 @@ public class GameManager implements Listener {
                     gameData.getCorpseList().get(i).removeTexture();
                 }
                 for (i = 0; i < gameData.getPlayerList().size(); i++) {
-                    gameData.getPlayerList().get(i).removeScoreboardTag("dead");
-                    gameData.getPlayerList().get(i).removeScoreboardTag("shipped");
-                    gameData.getPlayerList().get(i).getInventory().clear();
-                    gameData.getPlayerList().get(i).teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
-                    gameData.getPlayerList().get(i).setGameMode(GameMode.SURVIVAL);
-                    Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(gameData.getPlayerList().get(i).getName()).setScore(0);
-                    gameData.getGametimeBar().removePlayer(gameData.getPlayerList().get(i));
+                    if (gameData.getPlayerList().get(i).isOnline()) {
+                        ResetPlayer(gameData.getPlayerList().get(i), gameData);
+                    }
                 }
                 for (i = 0; i < gameData.getTreasureNumberList().size(); i++) {
                     int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + gameData.getSelectedMapNumber() + "TreasureSpawn" + gameData.getTreasureNumberList().get(i) + "X").getScore();
@@ -1121,6 +1169,27 @@ public class GameManager implements Listener {
         }.runTaskTimer(main, 200L, 1L);
     }
 
+    public void ResetPlayer(Player p, GameData gameData) {
+        p.removeScoreboardTag("dead");
+        p.removeScoreboardTag("shipped");
+        p.getInventory().clear();
+        p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        p.setGameMode(GameMode.SURVIVAL);
+        p.setHealth(20);
+        Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(p.getName()).setScore(0);
+        gameData.getGametimeBar().removePlayer(p);
+    }
+
+    public void ResetPlayer(Player p) {
+        p.removeScoreboardTag("dead");
+        p.removeScoreboardTag("shipped");
+        p.getInventory().clear();
+        p.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+        p.setGameMode(GameMode.SURVIVAL);
+        p.setHealth(20);
+        Objects.requireNonNull(main.mainScoreboard.getObjective("Kills")).getScore(p.getName()).setScore(0);
+    }
+
     public void Shutdown() {
         int i;
         int i2;
@@ -1143,6 +1212,22 @@ public class GameManager implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill @e[tag=treasure_texture]");
             }
         }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player p = event.getPlayer();
+        int i;
+        int i2;
+        for (i = 0; i < GameDataList.size(); i++) {
+            for (i2 = 0; i2 < GameDataList.get(i2).getPlayerList().size(); i2++) {
+                if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
+                    spawnCorpse(p, GameDataList.get(i));
+                    return;
+                }
+            }
+        }
+        ResetPlayer(p);
     }
 
     public BossBar createBossbar(String name, BarColor color, BarStyle style) {

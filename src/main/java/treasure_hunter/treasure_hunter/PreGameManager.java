@@ -27,7 +27,12 @@ public class PreGameManager implements Listener {
     private final Random random = new Random();
 
     public void MapChoosing(int GameDataNumber) {
-
+        if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+            int pi;
+            for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Map Wahl Funktion gestartet"));
+            }
+        }
         gameManager.getGameDataList().get(GameDataNumber).setGamestate(2);
         if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
             int pi;
@@ -75,19 +80,29 @@ public class PreGameManager implements Listener {
                 }
             }
         }
+        MapChoosingInv(GameDataNumber);
+    }
 
+    public void MapChoosingInv(int GameDataNumber) {
         new BukkitRunnable() {
 
             int number = Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MapChoosingTime").getScore();
 
             @Override
             public void run() {
+                if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                    int pi;
+                    for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
+                        gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Map Wahl Inventory Funktion gestartet"));
+                    }
+                }
                 if (number >= 0) {
                     int i;
                     for (i = 0; i < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); i++) {
                         Player p = gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(i);
                         p.openInventory(getMapChoosingInv(number, GameDataNumber));
                         p.sendMessage(format("&6Debug: Map Wahl Inventory geöffnet"));
+                        number--;
                     }
                 }else {
                     if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
@@ -136,7 +151,6 @@ public class PreGameManager implements Listener {
                     }
                     cancel();
                 }
-                number--;
             }
         }.runTaskTimer(gameManager.main, 0L, 20L);
     }

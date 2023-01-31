@@ -17,3 +17,6 @@ commands:
   setup:
     description: Setup for certain server functions
     usage: /<command>
+  all:
+    description: Send a message to all players in Game
+    usage: /<command>
