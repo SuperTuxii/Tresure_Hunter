@@ -276,11 +276,18 @@ public class GameManager implements Listener {
                         }
                     }
                     cancel();
+                    return;
                 }
                 if (number > 0) {
                     int i;
                     for (i = 0; i < GameDataList.get(GameDataNumber).getCorpseList().size(); i++) {
                         GameDataList.get(GameDataNumber).getCorpseList().get(i).updatePlayerInventory();
+                    }
+                    for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
+                        MultireviveInHandCheck(GameDataList.get(GameDataNumber).getPlayerList().get(i));
+                    }
+                    for (i = 0; i < GameDataList.get(GameDataNumber).getMultireviveAnimationList().size(); i++) {
+                        MultireviveNotInHandCheck(GameDataList.get(GameDataNumber).getMultireviveAnimationList().get(i));
                     }
                     checkForEnd(GameDataList.get(GameDataNumber));
                     double RoundTime = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RoundTime").getScore();
@@ -783,6 +790,7 @@ public class GameManager implements Listener {
                         corpse.setReviving(false);
                         bar.removePlayer(p);
                         cancel();
+                        return;
                     }
                     corpse.getPlayer().teleport(corpse.getPosition());
                     corpse.getPlayer().setGameMode(GameMode.ADVENTURE);
@@ -851,6 +859,7 @@ public class GameManager implements Listener {
                         }
                         bar.removePlayer(p);
                         cancel();
+                        return;
                     }
                     if (!p.isSneaking() || !gameData.getTreasureStatusList().get(TreasureNumber)) {
                         if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
@@ -861,6 +870,7 @@ public class GameManager implements Listener {
                         }
                         bar.removePlayer(p);
                         cancel();
+                        return;
                     }
                     int i;
                     p.getWorld().getBlockAt(x, y, z).setType(Material.AIR);
@@ -1034,7 +1044,7 @@ public class GameManager implements Listener {
             }
             if (gameData.getSavedTreasure() < gameData.getTreasureNumberList().size() / 2) {
                 for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
-                    gameData.getPlayerList().get(i2).sendTitle(format("&4Team Blau hat gewonnen"), format("&cdie Roten sind geflohen!"), 20, 160, 20);
+                    gameData.getPlayerList().get(i2).sendTitle(format("&1Team Blau hat gewonnen"), format("&9die Roten sind geflohen!"), 20, 160, 20);
                 }
                 if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                     int pi;
@@ -1096,7 +1106,7 @@ public class GameManager implements Listener {
             Restart(gameData);
         }else if (RedTeamLeftOnShip == 0) {
             for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
-                gameData.getPlayerList().get(i2).sendTitle(format("&4Team Blau hat gewonnen"), format("&csie haben alle Roten eliminiert!"), 20, 160, 20);
+                gameData.getPlayerList().get(i2).sendTitle(format("&1Team Blau hat gewonnen"), format("&9sie haben alle Roten eliminiert!"), 20, 160, 20);
             }
             if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                 int pi;
@@ -1258,6 +1268,22 @@ public class GameManager implements Listener {
             }
         }
         p.sendMessage(format("&cDu bist nicht in einem Spiel"));
+    }
+
+    public void MultireviveInHandCheck(Player p) {
+        if (p.getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive())) {
+
+            return;
+        }
+        if (p.getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
+
+        }
+    }
+
+    public void MultireviveNotInHandCheck(MultireviveAnimation mA) {
+        if (!mA.getPlayer().getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive()) && !mA.getPlayer().getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
+
+        }
     }
 
     public BossBar createBossbar(String name, BarColor color, BarStyle style) {

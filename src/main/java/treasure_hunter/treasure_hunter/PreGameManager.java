@@ -102,8 +102,8 @@ public class PreGameManager implements Listener {
                         Player p = gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(i);
                         p.openInventory(getMapChoosingInv(number, GameDataNumber));
                         p.sendMessage(format("&6Debug: Map Wahl Inventory geöffnet"));
-                        number--;
                     }
+                    number--;
                 }else {
                     if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                         int pi;

@@ -31,7 +31,8 @@ public class GameData {
     private ArrayList<Integer> TreasureNumberList = new ArrayList<>();
     private ArrayList<Boolean> TreasureStatusList = new ArrayList<>();
     private int SavedTreasure = 0;
-    BossBar GametimeBar = Bukkit.createBossBar(ChatColor.translateAlternateColorCodes('&', "&a&lSpielzeit"), BarColor.GREEN, BarStyle.SOLID);
+    private BossBar GametimeBar = Bukkit.createBossBar(ChatColor.translateAlternateColorCodes('&', "&a&lSpielzeit"), BarColor.GREEN, BarStyle.SOLID);
+    private ArrayList<MultireviveAnimation> MultireviveAnimationList = new ArrayList<>();
 
     public int getGamestate() {
         return Gamestate;
@@ -80,6 +81,9 @@ public class GameData {
     }
     public BossBar getGametimeBar() {
         return GametimeBar;
+    }
+    public ArrayList<MultireviveAnimation> getMultireviveAnimationList() {
+        return MultireviveAnimationList;
     }
 
     public void setGamestate(int gamestate) {
