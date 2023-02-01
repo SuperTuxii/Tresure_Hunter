@@ -409,73 +409,75 @@ public class GameManager implements Listener {
 
     @EventHandler
     public void OnInventoryClick(InventoryClickEvent event) {
-        Inventory inv = event.getClickedInventory();
-        assert inv != null;
-        int i;
-        int i2;
-        int i3;
-        for (i = 0; i < GameDataList.size(); i++) {
-            if (GameDataList.get(i).getGamestate() == 3) {
-                for (i2 = 0; i2 < GameDataList.get(i).getPlayerList().size(); i2++) {
-                    if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(event.getWhoClicked().getName())) {
-                        Player p = (Player) event.getWhoClicked();
-                        if (event.getClickedInventory().getHolder() instanceof ShopHolder) {
-                            event.setCancelled(true);
-                            if (event.getSlot() == 0) {
-                                if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore())) {
-                                    clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore());
-                                    HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getRevolver());
+        if (event.getClickedInventory() != null) {
+            Inventory inv = event.getClickedInventory();
+            assert inv != null;
+            int i;
+            int i2;
+            int i3;
+            for (i = 0; i < GameDataList.size(); i++) {
+                if (GameDataList.get(i).getGamestate() == 3) {
+                    for (i2 = 0; i2 < GameDataList.get(i).getPlayerList().size(); i2++) {
+                        if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(event.getWhoClicked().getName())) {
+                            Player p = (Player) event.getWhoClicked();
+                            if (event.getClickedInventory().getHolder() instanceof ShopHolder) {
+                                event.setCancelled(true);
+                                if (event.getSlot() == 0) {
+                                    if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore())) {
+                                        clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore());
+                                        HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getRevolver());
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i3 = 0; i3 < remainingItems.size(); i3++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
+                                        }
+                                    }
+                                } else if (event.getSlot() == 1) {
+                                    if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore())) {
+                                        clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore());
+                                        HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getBullet(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletAmount").getScore()));
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i3 = 0; i3 < remainingItems.size(); i3++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
+                                        }
+                                    }
+                                } else if (event.getSlot() == 2) {
+                                    if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore())) {
+                                        clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore());
+                                        HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getMedkit());
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i3 = 0; i3 < remainingItems.size(); i3++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
+                                        }
+                                    }
+                                } else if (event.getSlot() == 3) {
+                                    if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore()) && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
+                                        clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore());
+                                        HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getSchiff());
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i3 = 0; i3 < remainingItems.size(); i3++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
+                                        }
+                                    }
+                                } else if (event.getSlot() == 4) {
+                                    if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore())) {
+                                        clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore());
+                                        HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getMultirevive());
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i3 = 0; i3 < remainingItems.size(); i3++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
+                                        }
+                                    }
+                                } else if (event.getSlot() == 5 && Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                                    HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getCoins(64));
                                     if (!remainingItems.isEmpty()) {
                                         for (i3 = 0; i3 < remainingItems.size(); i3++) {
                                             p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
                                         }
-                                    }
-                                }
-                            }else if (event.getSlot() == 1) {
-                                if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore())) {
-                                    clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore());
-                                    HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getBullet(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletAmount").getScore()));
-                                    if (!remainingItems.isEmpty()) {
-                                        for (i3 = 0; i3 < remainingItems.size(); i3++) {
-                                            p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
-                                        }
-                                    }
-                                }
-                            }else if (event.getSlot() == 2) {
-                                if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore())) {
-                                    clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore());
-                                    HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getMedkit());
-                                    if (!remainingItems.isEmpty()) {
-                                        for (i3 = 0; i3 < remainingItems.size(); i3++) {
-                                            p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
-                                        }
-                                    }
-                                }
-                            }else if (event.getSlot() == 3) {
-                                if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore()) && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
-                                    clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore());
-                                    HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getSchiff());
-                                    if (!remainingItems.isEmpty()) {
-                                        for (i3 = 0; i3 < remainingItems.size(); i3++) {
-                                            p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
-                                        }
-                                    }
-                                }
-                            }else if (event.getSlot() == 4) {
-                                if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore())) {
-                                    clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore());
-                                    HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getMultirevive());
-                                    if (!remainingItems.isEmpty()) {
-                                        for (i3 = 0; i3 < remainingItems.size(); i3++) {
-                                            p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
-                                        }
-                                    }
-                                }
-                            }else if (event.getSlot() == 5 && Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
-                                HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getCoins(64));
-                                if (!remainingItems.isEmpty()) {
-                                    for (i3 = 0; i3 < remainingItems.size(); i3++) {
-                                        p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
                                     }
                                 }
                             }
@@ -666,7 +668,7 @@ public class GameManager implements Listener {
                 }
                 cancel();
             }
-        }.runTaskTimer(main, 1L, 0L);
+        }.runTaskTimer(main, 1L, 1L);
     }
 
     @EventHandler
@@ -885,35 +887,37 @@ public class GameManager implements Listener {
 
     public void spawnBoat(Location location, Player p, double time, int GameDataNumber) {
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute at " + p.getName() + " run setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
-        location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
-        p.teleport(location.add(0, 1, 0));
-
-        BossBar bar = createBossbar(format("&9Schiff wird vorbereitet ..."), BarColor.BLUE, BarStyle.SOLID);
         int i;
-        for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
-            Player player = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
-            assert player != null;
-            bar.addPlayer(player);
-        }
+        BossBar bar = createBossbar(format("&9Schiff wird vorbereitet ..."), BarColor.BLUE, BarStyle.SOLID);
         for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-            p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 0.1f);
-            p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 2);
+            p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 100, 0.1f);
+            p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 100, 2);
         }
 
         new BukkitRunnable() {
-            int number = 0;
+            int number = -2;
 
             @Override
             public void run() {
                 if (number != time) {
-                    if (number == 2) {
+                    if (number == 0) {
                         int i;
                         for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                            p.playSound(location, Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 1000, 0.25f);
+                            p.playSound(location, Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 100, 0.25f);
                         }
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute at " + p.getName() + " run setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
+                        location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
+                        p.teleport(location.add(0, 1, 0));
+                        for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
+                            Player player = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
+                            assert player != null;
+                            bar.addPlayer(player);
+                        }
+
                     }
-                    bar.setProgress((1 / time) * number);
+                    if (number >= 0) {
+                        bar.setProgress((1 / time) * number);
+                    }
                     number++;
                 }else {
                     int x;
@@ -961,8 +965,8 @@ public class GameManager implements Listener {
                         }
                     }
                     for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 1000, 0.1f);
-                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 1000, 2);
+                        p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 100, 0.1f);
+                        p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 100, 2);
                     }
                     if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                         int pi;
@@ -1040,7 +1044,7 @@ public class GameManager implements Listener {
                 }
                 Restart(gameData);
                 return;
-            }else if (gameData.getSavedTreasure() > gameData.getTreasureNumberList().size() / 2 && gameData.getSavedTreasure() < gameData.getTreasureNumberList().size()) {
+            }else if (gameData.getSavedTreasure() >= gameData.getTreasureNumberList().size() / 2 && gameData.getSavedTreasure() < gameData.getTreasureNumberList().size()) {
                 for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
                     gameData.getPlayerList().get(i2).sendTitle(format("&3Unentschieden"), format("&bdie Roten sind mit ein paar Schätzen geflohen!"), 20, 160, 20);
                 }
@@ -1054,7 +1058,7 @@ public class GameManager implements Listener {
                 return;
             }else {
                 for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
-                    gameData.getPlayerList().get(i2).sendTitle(format("&4Team Rot hat gewonnen"), format("&csie sind mit den Schätzen!"), 20, 160, 20);
+                    gameData.getPlayerList().get(i2).sendTitle(format("&4Team Rot hat gewonnen"), format("&csie sind mit den Schätzen entkommen!"), 20, 160, 20);
                 }
                 if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                     int pi;
@@ -1158,6 +1162,7 @@ public class GameManager implements Listener {
                         gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Alles Resetet"));
                     }
                 }
+                cancel();
             }
         }.runTaskTimer(main, 200L, 1L);
     }
@@ -1213,7 +1218,7 @@ public class GameManager implements Listener {
         int i;
         int i2;
         for (i = 0; i < GameDataList.size(); i++) {
-            for (i2 = 0; i2 < GameDataList.get(i2).getPlayerList().size(); i2++) {
+            for (i2 = 0; i2 < GameDataList.get(i).getPlayerList().size(); i2++) {
                 if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
                     spawnCorpse(p, GameDataList.get(i));
                     return;
@@ -1231,7 +1236,7 @@ public class GameManager implements Listener {
         int i2;
         int i3;
         for (i = 0; i < GameDataList.size(); i++) {
-            for (i2 = 0; i2 < GameDataList.get(i2).getPlayerList().size(); i2++) {
+            for (i2 = 0; i2 < GameDataList.get(i).getPlayerList().size(); i2++) {
                 if (GameDataList.get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
                     if (GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
                         for (i3 = 0; i3 < GameDataList.get(i).getRedPlayerList().size(); i3++) {
