@@ -284,7 +284,7 @@ public class GameManager implements Listener {
                         GameDataList.get(GameDataNumber).getCorpseList().get(i).updatePlayerInventory();
                     }
                     for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                        MultireviveInHandCheck(GameDataList.get(GameDataNumber).getPlayerList().get(i));
+                        MultireviveInHandCheck(GameDataList.get(GameDataNumber).getPlayerList().get(i), GameDataList.get(GameDataNumber));
                     }
                     for (i = 0; i < GameDataList.get(GameDataNumber).getMultireviveAnimationList().size(); i++) {
                         MultireviveNotInHandCheck(GameDataList.get(GameDataNumber).getMultireviveAnimationList().get(i));
@@ -377,6 +377,12 @@ public class GameManager implements Listener {
                                 }
                             }else if (Objects.requireNonNull(event.getItem()).isSimilar(itemManager.getMultirevive())) {
                                 event.setCancelled(true);
+                                for (i3 = 0; i3 < GameDataList.get(i).getMultireviveAnimationList().size(); i3++) {
+                                    if (GameDataList.get(i).getMultireviveAnimationList().get(i3).getPlayer().getName().equals(p.getName())) {
+                                        GameDataList.get(i).getMultireviveAnimationList().get(i3).setState(4);
+                                    }
+                                }
+                                p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
                                 if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                                     int pi;
                                     for (pi = 0; pi < getGameDataList().get(i).getPlayerList().size(); pi++) {
@@ -1270,19 +1276,40 @@ public class GameManager implements Listener {
         p.sendMessage(format("&cDu bist nicht in einem Spiel"));
     }
 
-    public void MultireviveInHandCheck(Player p) {
+    public void MultireviveInHandCheck(Player p, GameData gameData) {
+        int i;
         if (p.getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive())) {
-
+            for (i = 0; i < gameData.getMultireviveAnimationList().size(); i++) {
+                if (gameData.getMultireviveAnimationList().get(i).getPlayer().getName().equals(p.getName())) {
+                    gameData.getMultireviveAnimationList().get(i).setState(1);
+                    return;
+                }
+            }
+            if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                int pi;
+                for (pi = 0; pi < gameData.getPlayerList().size(); pi++) {
+                    gameData.getPlayerList().get(pi).sendMessage(format("&6Debug: Created Multirevive Animation"));
+                }
+            }
+            gameData.getMultireviveAnimationList().add(new MultireviveAnimation(main, gameData, p));
             return;
         }
         if (p.getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
-
+            for (i = 0; i < gameData.getMultireviveAnimationList().size(); i++) {
+                if (gameData.getMultireviveAnimationList().get(i).getPlayer().getName().equals(p.getName())) {
+                    gameData.getMultireviveAnimationList().get(i).setState(1);
+                    return;
+                }
+            }
+            gameData.getMultireviveAnimationList().add(new MultireviveAnimation(main, gameData, p));
         }
     }
 
     public void MultireviveNotInHandCheck(MultireviveAnimation mA) {
+        mA.getPlayer().sendMessage(mA.getPlayer().getName() + " " + mA.TotemCount + " " + mA.TextureList.size() + " " + mA.State);
         if (!mA.getPlayer().getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive()) && !mA.getPlayer().getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
-
+            mA.setState(3);
+            mA.deleteClass();
         }
     }
 

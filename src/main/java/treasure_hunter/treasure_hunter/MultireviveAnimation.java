@@ -1,6 +1,7 @@
 package treasure_hunter.treasure_hunter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -15,20 +16,22 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MultireviveAnimation {
-    private Player player;
-    private ArrayList<Entity> TextureList = new ArrayList<>();
-    private int State;
-    private int TotemCount = 0;
-    private GameData gameData;
-    private Treasure_Hunter main;
+    public Player player;
+    public ArrayList<Entity> TextureList = new ArrayList<>();
+    public int State;
+    public int TotemCount = 0;
+    public GameData gameData;
+    public Treasure_Hunter main;
 
     public MultireviveAnimation(Treasure_Hunter treasureHunter, GameData gameData, Player p) {
+        System.out.println("Animation created");
         main = treasureHunter;
         this.gameData = gameData;
         player = p;
         State = 1;
         createTextures();
         if (TotemCount != 0) {
+            System.out.println("Starting Animation");
             startAnimation();
             updateTotemCount();
         }else {
@@ -89,6 +92,7 @@ public class MultireviveAnimation {
                 }
             }
         }
+        TotemCount = 3;
         for (i = 0; i < TotemCount; i++) {
             TextureList.add(player.getWorld().spawn(player.getLocation(), ArmorStand.class, entity -> {
                 Objects.requireNonNull(entity.getEquipment()).setHelmet(new ItemStack(Material.TOTEM_OF_UNDYING, 1));
@@ -110,16 +114,18 @@ public class MultireviveAnimation {
                 entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING);
             }));
         }
+        System.out.println("createdTextures");
     }
 
     public void startAnimation() {
+        System.out.println("startAnimation");
         new BukkitRunnable() {
             int number = 0;
             int i;
+            final double maxRadius = getMaxRadius(player.getLocation());
             @Override
             public void run() {
                 Location loc = player.getLocation();
-                double maxRadius = getMaxRadius(loc);
                 if (State == 3) {
                     double radius = maxRadius * Math.sin(number * Math.PI / 180);
                     endAnimation(number, radius);
@@ -136,7 +142,7 @@ public class MultireviveAnimation {
                         Entity texture = TextureList.get(i);
                         double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         x += loc.getX();
-                        double y = loc.getY() - 1;
+                        double y = loc.getY() - 2;
                         double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
@@ -154,6 +160,7 @@ public class MultireviveAnimation {
     }
 
     public void startAnimation(int n, double radius) {
+        System.out.println("startAnimation2");
         new BukkitRunnable() {
             int number = n;
             int i;
@@ -181,7 +188,7 @@ public class MultireviveAnimation {
                         Entity texture = TextureList.get(i);
                         double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         x += loc.getX();
-                        double y = loc.getY() - 1;
+                        double y = loc.getY() - 2;
                         double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
@@ -199,6 +206,7 @@ public class MultireviveAnimation {
     }
 
     public void Animation(int n) {
+        System.out.println("Animation");
         new BukkitRunnable() {
             int number = n;
             int i;
@@ -210,7 +218,7 @@ public class MultireviveAnimation {
                     Entity texture = TextureList.get(i);
                     double x = maxRadius * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                     x += loc.getX();
-                    double y = loc.getY() - 1;
+                    double y = loc.getY() - 2;
                     double z = maxRadius * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                     z += loc.getZ();
                     texture.teleport(new Location(loc.getWorld(), x, y, z));
@@ -229,6 +237,7 @@ public class MultireviveAnimation {
     }
 
     public void endAnimation(int n) {
+        System.out.println("EndAnimation");
         new BukkitRunnable() {
             int number = 40;
             int number2 = n;
@@ -241,10 +250,10 @@ public class MultireviveAnimation {
                 if (number >= 0 && n2n <= 40) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 80) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double x = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 80) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
                     }
@@ -263,7 +272,7 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    double radius = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1);
                     startAnimation(number2, radius);
                     cancel();
                 }
@@ -272,6 +281,7 @@ public class MultireviveAnimation {
     }
 
     public void endAnimation(int n, double radius) {
+        System.out.println("EndAnimation2");
         new BukkitRunnable() {
             int number = 40;
             int number2 = n;
@@ -287,10 +297,10 @@ public class MultireviveAnimation {
                 if (number >= 0 && n2n <= 40) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 80) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double x = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 80) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
                     }
@@ -309,7 +319,7 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    double radius = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1);
                     startAnimation(number2, radius);
                     cancel();
                 }
@@ -340,6 +350,8 @@ public class MultireviveAnimation {
         for (i = 0; i < TotenList.size(); i++) {
             TotenList.get(i).teleport(TextureList.get(i).getLocation());
         }
+        deleteTextures();
+        deleteClass();
     }
 
     public void deleteClass() {
@@ -533,6 +545,7 @@ public class MultireviveAnimation {
                         }
                     }
                 }
+                TotemCount = 3;
                 if (TotemCount != TextureList.size()) {
                     deleteTextures();
                     createTextures();
@@ -550,7 +563,15 @@ public class MultireviveAnimation {
         }
     }
 
+    public void setState(int state) {
+        State = state;
+    }
+
     public Player getPlayer() {
         return player;
+    }
+
+    public String format(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }
