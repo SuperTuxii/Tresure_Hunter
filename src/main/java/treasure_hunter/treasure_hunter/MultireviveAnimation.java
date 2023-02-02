@@ -28,10 +28,50 @@ public class MultireviveAnimation {
         player = p;
         State = 1;
         createTextures();
+        if (TotemCount != 0) {
+            startAnimation();
+            updateTotemCount();
+        }else {
+            waitForDeath();
+        }
+    }
+
+    public void waitForDeath() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                int i;
+                TotemCount = 0;
+                if (gameData.getRedPlayerList().contains(player.getName())) {
+                    for (i = 0; i < gameData.getRedPlayerList().size(); i++) {
+                        if (Bukkit.getPlayerExact(gameData.getRedPlayerList().get(i)) != null) {
+                            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                                TotemCount++;
+                            }
+                        }
+                    }
+                }else {
+                    for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
+                        if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
+                            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                                TotemCount++;
+                            }
+                        }
+                    }
+                }
+                if (TotemCount != 0) {
+                    createTextures();
+                    startAnimation();
+                    updateTotemCount();
+                    cancel();
+                }
+            }
+        }.runTaskTimer(main, 0L, 1L);
     }
 
     public void createTextures() {
         int i;
+        TotemCount = 0;
         if (gameData.getRedPlayerList().contains(player.getName())) {
             for (i = 0; i < gameData.getRedPlayerList().size(); i++) {
                 if (Bukkit.getPlayerExact(gameData.getRedPlayerList().get(i)) != null) {
@@ -113,55 +153,18 @@ public class MultireviveAnimation {
         }.runTaskTimer(main, 0L, 1L);
     }
 
-    public void startAnimation(int n) {
-        new BukkitRunnable() {
-            int number = 0;
-            int i;
-            @Override
-            public void run() {
-                Location loc = player.getLocation();
-                double maxRadius = getMaxRadius(loc);
-                if (State == 3) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
-                    endAnimation(number, radius);
-                    cancel();
-                    return;
-                }
-                if (State == 4) {
-                    reviveAnimation();
-                    cancel();
-                    return;
-                }
-                if (number <= 90) {
-                    for (i = 0; i < TextureList.size(); i++) {
-                        Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
-                        x += loc.getX();
-                        double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
-                        z += loc.getZ();
-                        texture.teleport(new Location(loc.getWorld(), x, y, z));
-                    }
-                    number++;
-                }else {
-                    if (State == 1) {
-                        State = 2;
-                    }
-                    Animation(number);
-                    cancel();
-                }
-            }
-        }.runTaskTimer(main, 0L, 1L);
-    }
-
     public void startAnimation(int n, double radius) {
         new BukkitRunnable() {
-            int number = 0;
+            int number = n;
             int i;
             @Override
             public void run() {
                 Location loc = player.getLocation();
                 double maxRadius = getMaxRadius(loc);
+                if (maxRadius >= radius) {
+                    maxRadius = radius;
+                }
+                int nn = number - n;
                 if (State == 3) {
                     double radius = maxRadius * Math.sin(number * Math.PI / 180);
                     endAnimation(number, radius);
@@ -173,7 +176,7 @@ public class MultireviveAnimation {
                     cancel();
                     return;
                 }
-                if (number <= 90) {
+                if (nn <= 90) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
                         double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
@@ -260,7 +263,8 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    startAnimation();
+                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    startAnimation(number2, radius);
                     cancel();
                 }
             }
@@ -305,7 +309,8 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    startAnimation();
+                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    startAnimation(number2, radius);
                     cancel();
                 }
             }
@@ -313,13 +318,38 @@ public class MultireviveAnimation {
     }
 
     public void reviveAnimation() {
-
+        int i;
+        ArrayList<Player> TotenList = new ArrayList<>();
+        if (gameData.getRedPlayerList().contains(player.getName())) {
+            for (i = 0; i < gameData.getRedPlayerList().size(); i++) {
+                if (Bukkit.getPlayerExact(gameData.getRedPlayerList().get(i)) != null) {
+                    if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                        TotenList.add(Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))));
+                    }
+                }
+            }
+        }else {
+            for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
+                if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
+                    if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                        TotenList.add(Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))));
+                    }
+                }
+            }
+        }
+        for (i = 0; i < TotenList.size(); i++) {
+            TotenList.get(i).teleport(TextureList.get(i).getLocation());
+        }
     }
 
     public void deleteClass() {
         int i;
         for (i = 0; i < gameData.getMultireviveAnimationList().size(); i++) {
-
+            if (gameData.getMultireviveAnimationList().get(i).getPlayer().getName().equals(player.getName())) {
+                gameData.getMultireviveAnimationList().get(i).deleteTextures();
+                gameData.getMultireviveAnimationList().remove(i);
+                return;
+            }
         }
     }
 
@@ -480,10 +510,47 @@ public class MultireviveAnimation {
         return maxRadius;
     }
 
+    public void updateTotemCount() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                int i;
+                TotemCount = 0;
+                if (gameData.getRedPlayerList().contains(player.getName())) {
+                    for (i = 0; i < gameData.getRedPlayerList().size(); i++) {
+                        if (Bukkit.getPlayerExact(gameData.getRedPlayerList().get(i)) != null) {
+                            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                                TotemCount++;
+                            }
+                        }
+                    }
+                }else {
+                    for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
+                        if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
+                            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                                TotemCount++;
+                            }
+                        }
+                    }
+                }
+                if (TotemCount != TextureList.size()) {
+                    deleteTextures();
+                    createTextures();
+                }
+            }
+        }.runTaskTimer(main, 0L, 1L);
+    }
+
+    public void deleteTextures() {
+        int i;
+        for (i = 0; i < TextureList.size(); i++) {
+            TextureList.get(i).remove();
+            TextureList.remove(i);
+            i--;
+        }
+    }
+
     public Player getPlayer() {
         return player;
-    }
-    public ArrayList<Entity> getTextureList() {
-        return TextureList;
     }
 }
