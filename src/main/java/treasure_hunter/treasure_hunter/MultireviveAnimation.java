@@ -1,7 +1,9 @@
 package treasure_hunter.treasure_hunter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -73,6 +75,7 @@ public class MultireviveAnimation {
     public void startAnimation() {
         new BukkitRunnable() {
             int number = 0;
+            int i;
             @Override
             public void run() {
                 if (State == 4) {
@@ -81,6 +84,15 @@ public class MultireviveAnimation {
                     return;
                 }
                 if (number <= 90) {
+                    for (i = 0; i < TextureList.size(); i++) {
+                        Entity texture = TextureList.get(i);
+                        Location loc = player.getLocation();
+                        double x = 0;
+                        double y = 0;
+                        double z = 0;
+                        double maxRadius = getMaxRadius(loc);
+                        texture.teleport(new Location(loc.getWorld(), x, y, z));
+                    }
                     number++;
                 }else {
                     if (State == 1) {
@@ -129,8 +141,84 @@ public class MultireviveAnimation {
         }.runTaskTimer(main, 0L, 1L);
     }
 
+    public void endAnimation(int maxRadius) {
+        new BukkitRunnable() {
+            int number = 0;
+            @Override
+            public void run() {
+                number++;
+                if (State == 4) {
+                    reviveAnimation();
+                    cancel();
+                }
+                if (State == 1) {
+                    startAnimation();
+                    cancel();
+                }
+            }
+        }.runTaskTimer(main, 0L, 1L);
+    }
+
     public void reviveAnimation() {
 
+    }
+
+    public double getMaxRadius(Location loc) {
+        double maxRadius = 0.5;
+        if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType().equals(Material.WATER)) {
+            if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType().equals(Material.WATER)) {
+                if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType().equals(Material.WATER)) {
+                    if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType().equals(Material.WATER)) {
+                        if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.WATER)) {
+                            if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.WATER)) {
+                                if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST).getType().equals(Material.WATER)) {
+                                    if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST).getType().equals(Material.WATER)) {
+                                        if (loc.getBlock().getRelative(BlockFace.EAST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.EAST).getType().equals(Material.WATER)) {
+                                            if (loc.getBlock().getRelative(BlockFace.WEST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.WEST).getType().equals(Material.WATER)) {
+                                                if (loc.getBlock().getRelative(BlockFace.NORTH).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.NORTH).getType().equals(Material.WATER)) {
+                                                    if (loc.getBlock().getRelative(BlockFace.SOUTH).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.SOUTH).getType().equals(Material.WATER)) {
+                                                        if (loc.getBlock().getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.WATER)) {
+                                                            if (loc.getBlock().getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.WATER)) {
+                                                                if (loc.getBlock().getRelative(BlockFace.NORTH_EAST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.NORTH_EAST).getType().equals(Material.WATER)) {
+                                                                    if (loc.getBlock().getRelative(BlockFace.NORTH_WEST).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.NORTH_WEST).getType().equals(Material.WATER)) {
+                                                                        maxRadius = 1;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (maxRadius == 1) {
+            if (loc.getBlock().getRelative(BlockFace.EAST, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.EAST, 2).getType().equals(Material.WATER)) {
+                if (loc.getBlock().getRelative(BlockFace.WEST, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.WEST, 2).getType().equals(Material.WATER)) {
+                    if (loc.getBlock().getRelative(BlockFace.NORTH, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.NORTH, 2).getType().equals(Material.WATER)) {
+                        if (loc.getBlock().getRelative(BlockFace.SOUTH, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.SOUTH, 2).getType().equals(Material.WATER)) {
+                            if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.EAST, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.EAST, 2).getType().equals(Material.WATER)) {
+                                if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.WEST, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.WEST, 2).getType().equals(Material.WATER)) {
+                                    if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.NORTH, 2).getType().equals(Material.WATER)) {
+                                        if (loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH, 2).getType().equals(Material.AIR) || loc.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH, 2).getType().equals(Material.WATER)) {
+                                            maxRadius = 2;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return maxRadius;
     }
 
     public Player getPlayer() {
