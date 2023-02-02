@@ -80,8 +80,8 @@ public class MultireviveAnimation {
             public void run() {
                 double maxRadius = getMaxRadius(loc);
                 if (State == 3) {
-                    double radius = 
-                    endAnimation();
+                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    endAnimation(radius);
                     cancel();
                     return;
                 }
@@ -94,8 +94,9 @@ public class MultireviveAnimation {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
                         Location loc = player.getLocation();
-                        double x = 0;
-                        double y = 0;
+                        double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        x += loc.getX();
+                        double y = loc.getY() - 1;
                         double z = 0;
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
                     }
