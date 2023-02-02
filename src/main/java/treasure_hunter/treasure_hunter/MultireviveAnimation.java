@@ -78,6 +78,13 @@ public class MultireviveAnimation {
             int i;
             @Override
             public void run() {
+                double maxRadius = getMaxRadius(loc);
+                if (State == 3) {
+                    double radius = 
+                    endAnimation();
+                    cancel();
+                    return;
+                }
                 if (State == 4) {
                     reviveAnimation();
                     cancel();
@@ -90,7 +97,6 @@ public class MultireviveAnimation {
                         double x = 0;
                         double y = 0;
                         double z = 0;
-                        double maxRadius = getMaxRadius(loc);
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
                     }
                     number++;
@@ -141,7 +147,7 @@ public class MultireviveAnimation {
         }.runTaskTimer(main, 0L, 1L);
     }
 
-    public void endAnimation(int maxRadius) {
+    public void endAnimation(int radius) {
         new BukkitRunnable() {
             int number = 0;
             @Override
