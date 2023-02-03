@@ -342,33 +342,35 @@ public class GameManager implements Listener {
                                 event.setCancelled(true);
                             }else if (Objects.requireNonNull(event.getItem()).isSimilar(itemManager.getSchiff())) {
                                 event.setCancelled(true);
-                                if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
-                                    return;
+                                if (GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
+                                    if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+                                        return;
 
-                                Block block = event.getPlayer().getTargetBlock(null, 4);
-                                if (block.getType() != Material.WATER)
-                                    return;
+                                    Block block = event.getPlayer().getTargetBlock(null, 4);
+                                    if (block.getType() != Material.WATER)
+                                        return;
 
-                                int x = block.getX();
-                                int y = block.getY();
-                                int z = block.getZ();
-                                while (block.getWorld().getBlockAt(x, y + 1, z).getType() == Material.WATER) {
-                                    y++;
-                                    block = block.getWorld().getBlockAt(x, y, z);
-                                }
+                                    int x = block.getX();
+                                    int y = block.getY();
+                                    int z = block.getZ();
+                                    while (block.getWorld().getBlockAt(x, y + 1, z).getType() == Material.WATER) {
+                                        y++;
+                                        block = block.getWorld().getBlockAt(x, y, z);
+                                    }
 
-                                for (x = block.getX() - 3; x <= block.getX() + 3; x++) {
-                                    for (y = block.getY(); y <= block.getY() + 6; y++) {
-                                        for (z = block.getZ() - 9; z <= block.getZ() + 7; z++) {
-                                            if (block.getWorld().getBlockAt(x, y, z).getType() != Material.AIR && block.getWorld().getBlockAt(x, y, z).getType() != Material.WATER) {
-                                                p.sendMessage(format("&cEin Block ist im Weg (" + block.getWorld().getBlockAt(x, y, z).getType() + ")"));
-                                                return;
+                                    for (x = block.getX() - 3; x <= block.getX() + 3; x++) {
+                                        for (y = block.getY(); y <= block.getY() + 6; y++) {
+                                            for (z = block.getZ() - 9; z <= block.getZ() + 7; z++) {
+                                                if (block.getWorld().getBlockAt(x, y, z).getType() != Material.AIR && block.getWorld().getBlockAt(x, y, z).getType() != Material.WATER) {
+                                                    p.sendMessage(format("&cEin Block ist im Weg (" + block.getWorld().getBlockAt(x, y, z).getType() + ")"));
+                                                    return;
+                                                }
                                             }
                                         }
                                     }
+                                    spawnBoat(block.getLocation(), p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffReadyTime").getScore(), i);
+                                    p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
                                 }
-                                spawnBoat(block.getLocation(), p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffReadyTime").getScore(), i);
-                                p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
                                 if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                                     int pi;
                                     for (pi = 0; pi < getGameDataList().get(i).getPlayerList().size(); pi++) {
@@ -1145,7 +1147,7 @@ public class GameManager implements Listener {
                     gameData.getCorpseList().get(i).removeTexture();
                 }
                 for (i = 0; i < gameData.getMultireviveAnimationList().size(); i++) {
-                    gameData.getMultireviveAnimationList().get(i).deleteClass();
+                    gameData.getMultireviveAnimationList().get(i).setState(3);
                 }
                 for (i = 0; i < gameData.getPlayerList().size(); i++) {
                     if (gameData.getPlayerList().get(i).isOnline()) {
