@@ -1309,7 +1309,6 @@ public class GameManager implements Listener {
         mA.getPlayer().sendMessage(mA.getPlayer().getName() + " " + mA.TotemCount + " " + mA.TextureList.size() + " " + mA.State);
         if (!mA.getPlayer().getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive()) && !mA.getPlayer().getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
             mA.setState(3);
-            mA.deleteClass();
         }
     }
 
