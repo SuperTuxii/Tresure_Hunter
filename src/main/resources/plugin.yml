@@ -19,3 +19,6 @@ commands:
   start:
     description: Start the Game with the given Players
     usage: /<command> <players>
+  resourcepack:
+    description: Load resourcepack
+    usage: /<command>

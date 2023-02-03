@@ -1144,6 +1144,9 @@ public class GameManager implements Listener {
                 for (i = 0; i < gameData.getCorpseList().size(); i++) {
                     gameData.getCorpseList().get(i).removeTexture();
                 }
+                for (i = 0; i < gameData.getMultireviveAnimationList().size(); i++) {
+                    gameData.getMultireviveAnimationList().get(i).deleteClass();
+                }
                 for (i = 0; i < gameData.getPlayerList().size(); i++) {
                     if (gameData.getPlayerList().get(i).isOnline()) {
                         ResetPlayer(gameData.getPlayerList().get(i), gameData);
@@ -1212,6 +1215,9 @@ public class GameManager implements Listener {
             for (i2 = 0; i2 < gameData.getCorpseList().size(); i2++) {
                 gameData.getCorpseList().get(i2).removeTexture();
             }
+            for (i2 = 0; i2 < gameData.getMultireviveAnimationList().size(); i2++) {
+                gameData.getMultireviveAnimationList().get(i2).deleteClass();
+            }
             for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
                 gameData.getPlayerList().get(i2).removeScoreboardTag("dead");
                 gameData.getPlayerList().get(i2).removeScoreboardTag("shipped");
@@ -1230,6 +1236,7 @@ public class GameManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
+        p.setResourcePack("https://www.udrop.com/file/7OBA/Server_Resourcepack_Plugin_(2).zip");
         int i;
         int i2;
         for (i = 0; i < GameDataList.size(); i++) {
@@ -1296,7 +1303,6 @@ public class GameManager implements Listener {
         if (p.getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
             for (i = 0; i < gameData.getMultireviveAnimationList().size(); i++) {
                 if (gameData.getMultireviveAnimationList().get(i).getPlayer().getName().equals(p.getName())) {
-                    gameData.getMultireviveAnimationList().get(i).setState(1);
                     return;
                 }
             }
@@ -1305,7 +1311,6 @@ public class GameManager implements Listener {
     }
 
     public void MultireviveNotInHandCheck(MultireviveAnimation mA) {
-        mA.getPlayer().sendMessage(mA.getPlayer().getName() + " " + mA.TotemCount + " " + mA.TextureList.size() + " " + mA.State);
         if (!mA.getPlayer().getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive()) && !mA.getPlayer().getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
             mA.setState(3);
         }

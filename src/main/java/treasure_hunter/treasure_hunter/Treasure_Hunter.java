@@ -8,10 +8,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
-import treasure_hunter.treasure_hunter.Commands.allCommand;
-import treasure_hunter.treasure_hunter.Commands.leaveCommand;
-import treasure_hunter.treasure_hunter.Commands.setupCommand;
-import treasure_hunter.treasure_hunter.Commands.startCommand;
+import treasure_hunter.treasure_hunter.Commands.*;
 
 import java.util.Objects;
 
@@ -20,6 +17,7 @@ public final class Treasure_Hunter extends JavaPlugin {
     private final setupCommand setupCommand = new setupCommand(this);
     private final allCommand allCommand = new allCommand(this);
     private final startCommand startCommand = new startCommand(this);
+    private final resourcepackCommand resourcepackCommand = new resourcepackCommand();
     private final Queue queue = new Queue(this);
     private GameManager gameManager;
     private final MapManager mapManager = new MapManager(this);
@@ -48,6 +46,7 @@ public final class Treasure_Hunter extends JavaPlugin {
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
         Objects.requireNonNull(getCommand("all")).setExecutor(allCommand);
         Objects.requireNonNull(getCommand("start")).setExecutor(startCommand);
+        Objects.requireNonNull(getCommand("resourcepack")).setExecutor(resourcepackCommand);
     }
 
     public void registerEvents() {

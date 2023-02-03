@@ -157,61 +157,60 @@ public class PreGameManager implements Listener {
 
     public Inventory getMapChoosingInv(int time_in_seconds, int GameDataNumber) {
         Inventory inventory = Bukkit.createInventory(new ChoosingHolder(), 27, "MapChoosing--------------" + time_in_seconds);
-        inventory.setItem(0, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(1, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(2, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(3, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(4, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(5, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(6, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(7, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(8, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(9, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(10, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(11, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(12, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(13, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(14, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(15, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(16, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(17, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(18, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(19, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(20, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
-        inventory.setItem(21, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(23, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
-        inventory.setItem(24, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(25, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
-        inventory.setItem(26, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
+        inventory.setItem(0, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(1, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(2, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(3, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(4, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(5, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(6, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(7, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(8, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(9, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(10, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(11, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(12, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(13, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(14, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(15, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(16, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(17, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(18, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(19, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        inventory.setItem(20, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
+        inventory.setItem(21, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        inventory.setItem(23, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
+        inventory.setItem(24, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(25, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        inventory.setItem(26, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
         return inventory;
     }
 
-    public ItemStack getMapItem(int MapNumber, int GameDataNumber, int Map) {
-        int Map1 = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
-        int Map2 = gameManager.getGameDataList().get(GameDataNumber).getMap2List().size();
-        int Map3 = gameManager.getGameDataList().get(GameDataNumber).getMap3List().size();
-        if (Map1 == 0) Map1++;
-        if (Map2 == 0) Map2++;
-        if (Map3 == 0) Map3++;
-
+    public ItemStack getMapItem(int MapNumber) {
         ItemStack MapItem;
-        if (Map == 1) {
-            MapItem = new ItemStack(Material.PAPER, Map1);
-        }else if (Map == 2) {
-            MapItem = new ItemStack(Material.PAPER, Map2);
-        }else {
-            MapItem = new ItemStack(Material.PAPER, Map3);
-        }
+        MapItem = new ItemStack(Material.PAPER, 1);
         ItemMeta MapItemMeta = MapItem.getItemMeta();
         assert MapItemMeta != null;
-        MapItemMeta.setDisplayName(format(gameManager.main.getMapManager().getMapName(MapNumber)));
+        MapItemMeta.setDisplayName(format("&r" + gameManager.main.getMapManager().getMapName(MapNumber)));
         MapItemMeta.setCustomModelData(Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "CustomModelData").getScore());
         MapItem.setItemMeta(MapItemMeta);
         return MapItem;
     }
 
-    public ItemStack getMapItemInvisible(int MapNumber, int GameDataNumber, int Map) {
+    public ItemStack getMapItemInvisible(int MapNumber) {
+
+        ItemStack MapItem;
+        MapItem = new ItemStack(Material.PAPER, 1);
+        ItemMeta MapItemMeta = MapItem.getItemMeta();
+        assert MapItemMeta != null;
+        MapItemMeta.setDisplayName(format("&r" + gameManager.main.getMapManager().getMapName(MapNumber)));
+        MapItemMeta.setCustomModelData(1);
+        MapItem.setItemMeta(MapItemMeta);
+        return MapItem;
+    }
+
+    public ItemStack getMapItemInvisibleWithCount(int MapNumber, int GameDataNumber, int Map) {
         int Map1 = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
         int Map2 = gameManager.getGameDataList().get(GameDataNumber).getMap2List().size();
         int Map3 = gameManager.getGameDataList().get(GameDataNumber).getMap3List().size();
@@ -229,7 +228,7 @@ public class PreGameManager implements Listener {
         }
         ItemMeta MapItemMeta = MapItem.getItemMeta();
         assert MapItemMeta != null;
-        MapItemMeta.setDisplayName(format(gameManager.main.getMapManager().getMapName(MapNumber)));
+        MapItemMeta.setDisplayName(format("&r" + gameManager.main.getMapManager().getMapName(MapNumber)));
         MapItemMeta.setCustomModelData(1);
         MapItem.setItemMeta(MapItemMeta);
         return MapItem;
