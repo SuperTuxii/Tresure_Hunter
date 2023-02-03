@@ -246,7 +246,7 @@ public class MultireviveAnimation {
         }else {
             for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
                 if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
-                    if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead")) {
+                    if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead")) {
                         TotenList.add(Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))));
                     }
                 }

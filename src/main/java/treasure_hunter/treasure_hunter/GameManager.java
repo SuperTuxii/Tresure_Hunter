@@ -44,11 +44,11 @@ public class GameManager implements Listener {
     private final ArrayList<GameData> GameDataList = new ArrayList<>();
 
     public void startGame(ArrayList<Player> PlayerList, int GameDataNumber) {
+        Collections.shuffle(GameDataList.get(GameDataNumber).getPlayerList());
         int i;
         GameDataList.get(GameDataNumber).getPlayerList().clear();
         for (i = 0; i < PlayerList.size(); i++) {
             GameDataList.get(GameDataNumber).getPlayerList().add(PlayerList.get(i));
-            Collections.shuffle(GameDataList.get(GameDataNumber).getPlayerList());
         }
         if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
             int pi;
@@ -1023,7 +1023,7 @@ public class GameManager implements Listener {
         }
         for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
             if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
-                if (!Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead") && !Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("shipped")) {
+                if (!Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead")) {
                     BlueTeamLeft++;
                 }
             }
