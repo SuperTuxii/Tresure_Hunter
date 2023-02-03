@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class MultireviveAnimation {
         if (TotemCount != 0) {
             System.out.println("Starting Animation");
             startAnimation();
-            updateTotemCount();
+            //updateTotemCount();
         }else {
             waitForDeath();
         }
@@ -145,6 +146,7 @@ public class MultireviveAnimation {
                         double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number * Math.PI / 180, 0));
                     }
                     number++;
                 }else {
@@ -191,6 +193,7 @@ public class MultireviveAnimation {
                         double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number * Math.PI / 180, 0));
                     }
                     number++;
                 }else {
@@ -222,6 +225,7 @@ public class MultireviveAnimation {
                     double z = maxRadius * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                     z += loc.getZ();
                     texture.teleport(new Location(loc.getWorld(), x, y, z));
+                    ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number * Math.PI / 180, 0));
                 }
                 number++;
                 if (State == 3) {
@@ -250,12 +254,13 @@ public class MultireviveAnimation {
                 if (number >= 0 && n2n <= 40) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double x = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number2 * Math.PI / 180, 0));
                     }
                     number2++;
                     number--;
@@ -272,7 +277,7 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    double radius = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1);
+                    double radius = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI);
                     startAnimation(number2, radius);
                     cancel();
                 }
@@ -297,12 +302,13 @@ public class MultireviveAnimation {
                 if (number >= 0 && n2n <= 40) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double x = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number2 * Math.PI / 180, 0));
                     }
                     number2++;
                     number--;
@@ -319,7 +325,7 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    double radius = maxRadius * (Math.sin(-(number * Math.PI / 80)) + 1);
+                    double radius = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI);
                     startAnimation(number2, radius);
                     cancel();
                 }
