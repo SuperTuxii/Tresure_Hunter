@@ -382,7 +382,6 @@ public class GameManager implements Listener {
                                         GameDataList.get(i).getMultireviveAnimationList().get(i3).setState(4);
                                     }
                                 }
-                                p.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
                                 if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                                     int pi;
                                     for (pi = 0; pi < getGameDataList().get(i).getPlayerList().size(); pi++) {
