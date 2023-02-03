@@ -20,6 +20,7 @@ public class MultireviveAnimation {
     public ArrayList<Entity> TextureList = new ArrayList<>();
     public int State;
     public int TotemCount = 0;
+    public double maxRadius = 1;
     public GameData gameData;
     public Treasure_Hunter main;
 
@@ -33,43 +34,8 @@ public class MultireviveAnimation {
         if (TotemCount != 0) {
             System.out.println("Starting Animation");
             startAnimation();
-            //updateTotemCount();
-        }else {
-            waitForDeath();
+            updateTotemCount();
         }
-    }
-
-    public void waitForDeath() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                int i;
-                TotemCount = 0;
-                if (gameData.getRedPlayerList().contains(player.getName())) {
-                    for (i = 0; i < gameData.getRedPlayerList().size(); i++) {
-                        if (Bukkit.getPlayerExact(gameData.getRedPlayerList().get(i)) != null) {
-                            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))).getScoreboardTags().contains("dead")) {
-                                TotemCount++;
-                            }
-                        }
-                    }
-                }else {
-                    for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
-                        if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
-                            if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead")) {
-                                TotemCount++;
-                            }
-                        }
-                    }
-                }
-                if (TotemCount != 0) {
-                    createTextures();
-                    startAnimation();
-                    updateTotemCount();
-                    cancel();
-                }
-            }
-        }.runTaskTimer(main, 0L, 1L);
     }
 
     public void createTextures() {
@@ -92,9 +58,11 @@ public class MultireviveAnimation {
                 }
             }
         }
-        TotemCount = 3;
+        if (TotemCount <= 3) {
+            TotemCount = 3;
+        }
         for (i = 0; i < TotemCount; i++) {
-            TextureList.add(player.getWorld().spawn(player.getLocation(), ArmorStand.class, entity -> {
+            TextureList.add(player.getWorld().spawn(player.getLocation().add(0, -1, 0), ArmorStand.class, entity -> {
                 Objects.requireNonNull(entity.getEquipment()).setHelmet(new ItemStack(Material.TOTEM_OF_UNDYING, 1));
                 entity.setGravity(false);
                 entity.setInvulnerable(true);
@@ -122,12 +90,16 @@ public class MultireviveAnimation {
         new BukkitRunnable() {
             int number = 0;
             int i;
-            final double maxRadius = 1;
             @Override
             public void run() {
                 Location loc = player.getLocation();
                 if (State == 3) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    double RadiusChange = number * Math.PI;
+                    RadiusChange /= 180;
+                    RadiusChange %= 2 * Math.PI;
+                    RadiusChange *= 2 * Math.PI;
+                    RadiusChange = Math.sin(RadiusChange);
+                    double radius = maxRadius * RadiusChange;
                     endAnimation(number, radius);
                     cancel();
                     return;
@@ -140,21 +112,32 @@ public class MultireviveAnimation {
                 if (number <= 90) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double RadiusChange = number * Math.PI;
+                        RadiusChange /= 180;
+                        RadiusChange %= 2 * Math.PI;
+                        RadiusChange = Math.sin(RadiusChange);
+                        double WinkelChange = number * Math.PI;
+                        WinkelChange /= 90;
+                        WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
+                        WinkelChange %= 2 * Math.PI;
+                        double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number * Math.PI / 180, 0));
+                        double Rotation = number * Math.PI;
+                        Rotation /= 180;
+                        Rotation %= 2 * Math.PI;
+                        Rotation = Math.abs(Rotation - (2 * Math.PI));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
                     }
                     number++;
                 }else {
-                    if (State == 1) {
-                        State = 2;
-                    }
+                    State = 2;
                     Animation(number);
                     cancel();
+                    return;
                 }
             }
         }.runTaskTimer(main, 0L, 1L);
@@ -168,13 +151,17 @@ public class MultireviveAnimation {
             @Override
             public void run() {
                 Location loc = player.getLocation();
-                double maxRadius = 1;
                 if (maxRadius >= radius) {
                     maxRadius = radius;
                 }
                 int nn = number - n;
                 if (State == 3) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 180);
+                    double RadiusChange = number * Math.PI;
+                    RadiusChange /= 180;
+                    RadiusChange %= 2 * Math.PI;
+                    RadiusChange *= 2 * Math.PI;
+                    RadiusChange = Math.sin(RadiusChange);
+                    double radius = maxRadius * RadiusChange;
                     endAnimation(number, radius);
                     cancel();
                     return;
@@ -187,21 +174,32 @@ public class MultireviveAnimation {
                 if (nn <= 90) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 180) * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double RadiusChange = nn * Math.PI;
+                        RadiusChange /= 180;
+                        RadiusChange %= 2 * Math.PI;
+                        RadiusChange = Math.sin(RadiusChange);
+                        double WinkelChange = number * Math.PI;
+                        WinkelChange /= 90;
+                        WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
+                        WinkelChange %= 2 * Math.PI;
+                        double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 180) * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number * Math.PI / 180, 0));
+                        double Rotation = number * Math.PI;
+                        Rotation /= 180;
+                        Rotation %= 2 * Math.PI;
+                        Rotation = Math.abs(Rotation - (2 * Math.PI));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
                     }
                     number++;
                 }else {
-                    if (State == 1) {
-                        State = 2;
-                    }
+                    State = 2;
                     Animation(number);
                     cancel();
+                    return;
                 }
             }
         }.runTaskTimer(main, 0L, 1L);
@@ -215,17 +213,27 @@ public class MultireviveAnimation {
             @Override
             public void run() {
                 Location loc = player.getLocation();
-                double maxRadius = 1;
                 for (i = 0; i < TextureList.size(); i++) {
                     Entity texture = TextureList.get(i);
-                    double x = maxRadius * Math.sin(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                    double RadiusChange = number * Math.PI;
+                    RadiusChange /= 180;
+                    RadiusChange %= 2 * Math.PI;
+                    RadiusChange = Math.sin(RadiusChange);
+                    double WinkelChange = number * Math.PI;
+                    WinkelChange /= 90;
+                    WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
+                    WinkelChange %= 2 * Math.PI;
+                    double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
                     x += loc.getX();
-                    double y = loc.getY();
-                    y -= 1;
-                    double z = maxRadius * Math.cos(number * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                    double y = loc.getY() - 1;
+                    double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                     z += loc.getZ();
                     texture.teleport(new Location(loc.getWorld(), x, y, z));
-                    ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number * Math.PI / 180, 0));
+                    double Rotation = number * Math.PI;
+                    Rotation /= 180;
+                    Rotation %= 2 * Math.PI;
+                    Rotation = Math.abs(Rotation - (2 * Math.PI));
+                    ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
                 }
                 number++;
                 if (State == 3) {
@@ -249,18 +257,28 @@ public class MultireviveAnimation {
             @Override
             public void run() {
                 Location loc = player.getLocation();
-                double maxRadius = 1;
-                int n2n = number2 - n;
-                if (number >= 0 && n2n <= 40) {
+                if (number >= 0) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double RadiusChange = number * Math.PI;
+                        RadiusChange /= 80;
+                        RadiusChange %= 2 * Math.PI;
+                        RadiusChange = Math.sin(RadiusChange);
+                        double WinkelChange = number2 * Math.PI;
+                        WinkelChange /= 90;
+                        WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
+                        WinkelChange %= 2 * Math.PI;
+                        double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number2 * Math.PI / 180, 0));
+                        double Rotation = number * Math.PI;
+                        Rotation /= 180;
+                        Rotation %= 2 * Math.PI;
+                        Rotation = Math.abs(Rotation - (2 * Math.PI));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
                     }
                     number2++;
                     number--;
@@ -277,7 +295,11 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI);
+                    double RadiusChange = number * Math.PI;
+                    RadiusChange /= 80;
+                    RadiusChange %= 2 * Math.PI;
+                    RadiusChange = Math.sin(RadiusChange);
+                    double radius = maxRadius * RadiusChange;
                     startAnimation(number2, radius);
                     cancel();
                 }
@@ -294,21 +316,28 @@ public class MultireviveAnimation {
             @Override
             public void run() {
                 Location loc = player.getLocation();
-                double maxRadius = 1;
-                if (maxRadius >= radius) {
-                    maxRadius = radius;
-                }
-                int n2n = number2 - n;
-                if (number >= 0 && n2n <= 40) {
+                if (number >= 0) {
                     for (i = 0; i < TextureList.size(); i++) {
                         Entity texture = TextureList.get(i);
-                        double x = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.sin(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double RadiusChange = number * Math.PI;
+                        RadiusChange /= 80;
+                        RadiusChange %= 2 * Math.PI;
+                        RadiusChange = Math.sin(RadiusChange);
+                        double WinkelChange = number2 * Math.PI;
+                        WinkelChange /= 90;
+                        WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
+                        WinkelChange %= 2 * Math.PI;
+                        double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI) * Math.cos(number2 * Math.PI / 90 + 2 * Math.PI / TextureList.size() * (i + 1));
+                        double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, number2 * Math.PI / 180, 0));
+                        double Rotation = number * Math.PI;
+                        Rotation /= 180;
+                        Rotation %= 2 * Math.PI;
+                        Rotation = Math.abs(Rotation - (2 * Math.PI));
+                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
                     }
                     number2++;
                     number--;
@@ -325,7 +354,11 @@ public class MultireviveAnimation {
                     cancel();
                 }
                 if (State == 1) {
-                    double radius = maxRadius * Math.sin(number * Math.PI / 80 + Math.PI);
+                    double RadiusChange = number * Math.PI;
+                    RadiusChange /= 80;
+                    RadiusChange %= 2 * Math.PI;
+                    RadiusChange = Math.sin(RadiusChange);
+                    double radius = maxRadius * RadiusChange;
                     startAnimation(number2, radius);
                     cancel();
                 }
@@ -355,6 +388,9 @@ public class MultireviveAnimation {
         }
         for (i = 0; i < TotenList.size(); i++) {
             TotenList.get(i).teleport(TextureList.get(i).getLocation());
+        }
+        if (TotenList.size() > 0) {
+            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
         }
         deleteTextures();
         deleteClass();
@@ -394,7 +430,9 @@ public class MultireviveAnimation {
                         }
                     }
                 }
-                TotemCount = 3;
+                if (TotemCount <= 3) {
+                    TotemCount = 3;
+                }
                 if (TotemCount != TextureList.size()) {
                     deleteTextures();
                     createTextures();
