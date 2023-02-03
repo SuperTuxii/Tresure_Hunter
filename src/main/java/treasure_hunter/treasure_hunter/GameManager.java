@@ -907,8 +907,8 @@ public class GameManager implements Listener {
         int i;
         BossBar bar = createBossbar(format("&9Schiff wird vorbereitet ..."), BarColor.BLUE, BarStyle.SOLID);
         for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-            p.playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 100, 0.1f);
-            p.playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 100, 2);
+            GameDataList.get(GameDataNumber).getPlayerList().get(i).playSound(location, Sound.ENTITY_BOAT_PADDLE_WATER, SoundCategory.MASTER, 100, 0.1f);
+            GameDataList.get(GameDataNumber).getPlayerList().get(i).playSound(location, Sound.BLOCK_WATER_AMBIENT, SoundCategory.MASTER, 100, 2);
         }
 
         new BukkitRunnable() {
@@ -916,15 +916,41 @@ public class GameManager implements Listener {
 
             @Override
             public void run() {
+                int i;
                 if (number != time) {
                     if (number == 0) {
-                        int i;
-                        for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                            p.playSound(location, Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 100, 0.25f);
+                        Block block = location.getBlock();
+                        int x = block.getX();
+                        int y = block.getY();
+                        int z = block.getZ();
+                        while (block.getWorld().getBlockAt(x, y + 1, z).getType() == Material.WATER) {
+                            y++;
+                            block = block.getWorld().getBlockAt(x, y, z);
+                        }
+
+                        for (x = block.getX() - 3; x <= block.getX() + 3; x++) {
+                            for (y = block.getY(); y <= block.getY() + 6; y++) {
+                                for (z = block.getZ() - 9; z <= block.getZ() + 7; z++) {
+                                    if (block.getWorld().getBlockAt(x, y, z).getType() != Material.AIR && block.getWorld().getBlockAt(x, y, z).getType() != Material.WATER) {
+                                        p.sendMessage(format("&cEin Block ist im Weg (" + block.getWorld().getBlockAt(x, y, z).getType() + ")"));
+                                        HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getSchiff());
+                                        if (!remainingItems.isEmpty()) {
+                                            for (i = 0; i < remainingItems.size(); i++) {
+                                                p.getWorld().dropItemNaturally(p.getLocation(), remainingItems.get(i));
+                                            }
+                                        }
+                                        cancel();
+                                        return;
+                                    }
+                                }
+                            }
                         }
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute at " + p.getName() + " run setblock " + location.getBlockX() + " " + location.getBlock().getRelative(BlockFace.UP).getY() + " " + location.getBlockZ() + " structure_block{name:\"minecraft:boat_red\",posX:-3,posY:-1,posZ:-9,sizeX:7,sizeY:6,sizeZ:17,rotation:\"NONE\",mirror:\"NONE\",mode:\"LOAD\"} replace");
                         location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
                         p.teleport(location.add(0, 1, 0));
+                        for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
+                            GameDataList.get(GameDataNumber).getPlayerList().get(i).playSound(GameDataList.get(GameDataNumber).getPlayerList().get(i).getLocation(), Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 100, 0.25f);
+                        }
                         for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
                             Player player = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
                             assert player != null;
@@ -951,7 +977,6 @@ public class GameManager implements Listener {
                             }
                         }
                     }
-                    int i;
                     for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
                         Player p = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
                         assert p != null;

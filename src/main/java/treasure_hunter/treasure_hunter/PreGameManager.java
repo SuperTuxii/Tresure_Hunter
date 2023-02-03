@@ -101,7 +101,6 @@ public class PreGameManager implements Listener {
                     for (i = 0; i < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); i++) {
                         Player p = gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(i);
                         p.openInventory(getMapChoosingInv(number, GameDataNumber));
-                        p.sendMessage(format("&6Debug: Map Wahl Inventory geöffnet"));
                     }
                     number--;
                 }else {

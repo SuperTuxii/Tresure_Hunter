@@ -55,6 +55,14 @@ public class startCommand implements CommandExecutor {
             }
             if (GameDataNumber != -1) {
                 main.getGameManager().startGame(GamePlayerList, GameDataNumber);
+                int i2;
+                for (i = 0; i < GamePlayerList.size(); i++) {
+                    for (i2 = 0; i2 < PlayerList.size(); i2++) {
+                        if (GamePlayerNameList.get(i).equals(PlayerList.get(i2))) {
+                            main.getQueue().PlayerList.remove(i2);
+                        }
+                    }
+                }
             } else {
                 p.sendMessage(format("&c"));
             }

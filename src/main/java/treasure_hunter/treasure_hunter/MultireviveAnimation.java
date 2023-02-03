@@ -220,16 +220,26 @@ public class MultireviveAnimation {
 
     public void reviveAnimation() {
         int i;
+        int i2;
         ArrayList<Player> TotenList = getTotenList();
         for (i = 0; i < TotenList.size(); i++) {
             TotenList.get(i).teleport(TextureList.get(i).getLocation());
             TotenList.get(i).playEffect(EntityEffect.TOTEM_RESURRECT);
+            TotenList.get(i).setGameMode(GameMode.ADVENTURE);
+            TotenList.get(i).setHealth(20);
+            TotenList.get(i).removeScoreboardTag("dead");
+            for (i2 = 0; i2 < gameData.getCorpseList().size(); i2++) {
+                if (gameData.getCorpseList().get(i2).getPlayer().getName().equals(TotenList.get(i).getName())) {
+                    gameData.getCorpseList().get(i2).updatePlayerInventory();
+                    gameData.getCorpseList().get(i2).removeTexture();
+                    gameData.getCorpseList().remove(i2);
+                    i2--;
+                }
+            }
         }
-        if (TotenList.size() > 0) {
-            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-            deleteTextures();
-            deleteClass();
-        }
+        player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+        deleteTextures();
+        deleteClass();
     }
 
     public ArrayList<Player> getTotenList() {
@@ -247,7 +257,7 @@ public class MultireviveAnimation {
             for (i = 0; i < gameData.getBluePlayerList().size(); i++) {
                 if (Bukkit.getPlayerExact(gameData.getBluePlayerList().get(i)) != null) {
                     if (Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))).getScoreboardTags().contains("dead")) {
-                        TotenList.add(Objects.requireNonNull(Bukkit.getPlayer(gameData.getRedPlayerList().get(i))));
+                        TotenList.add(Objects.requireNonNull(Bukkit.getPlayer(gameData.getBluePlayerList().get(i))));
                     }
                 }
             }

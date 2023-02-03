@@ -25,15 +25,15 @@ public class allCommand implements CommandExecutor {
             for (i = 0; i < main.getGameManager().getGameDataList().size(); i++) {
                 for (i2 = 0; i2 < main.getGameManager().getGameDataList().get(i).getPlayerList().size(); i2++) {
                     if (main.getGameManager().getGameDataList().get(i).getPlayerList().get(i2).getName().equals(p.getName())) {
-                        for (i3 = 0; i3 < main.getGameManager().getGameDataList().get(i).getRedPlayerList().size(); i3++) {
-                            Player pS = Bukkit.getPlayerExact(main.getGameManager().getGameDataList().get(i).getRedPlayerList().get(i3));
+                        for (i3 = 0; i3 < main.getGameManager().getGameDataList().get(i).getPlayerList().size(); i3++) {
+                            Player pS = main.getGameManager().getGameDataList().get(i).getPlayerList().get(i3);
                             StringBuilder Message = new StringBuilder(args[0]);
                             for (i4 = 1; i4 < args.length; i4++) {
                                 Message.append(" ");
                                 Message.append(args[i4]);
                             }
                             if (pS != null) {
-                                pS.sendMessage(format("&6[All] &f<" + p.getName() + "> " + Message));
+                                pS.sendMessage(format("&a[All] &f<" + p.getName() + "> " + Message));
                             }
                         }
                         return true;
