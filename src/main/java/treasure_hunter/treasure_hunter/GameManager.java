@@ -296,7 +296,7 @@ public class GameManager implements Listener {
                 }else {
                     int i;
                     for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                        GameDataList.get(GameDataNumber).getPlayerList().get(i).sendTitle(format("&4Team Blau hat gewonnen"), format("&cdie Zeit ist abgelaufen!"), 20, 160, 20);
+                        GameDataList.get(GameDataNumber).getPlayerList().get(i).sendTitle(format("&1Team Blau hat gewonnen"), format("&9die Zeit ist abgelaufen!"), 20, 160, 20);
                         if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                             GameDataList.get(GameDataNumber).getPlayerList().get(i).sendMessage(format("&6Debug: Zeit ist abgelaufen"));
                         }

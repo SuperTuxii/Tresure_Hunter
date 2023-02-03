@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.EulerAngle;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -126,18 +125,13 @@ public class MultireviveAnimation {
                         double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        double Rotation = number * Math.PI;
-                        Rotation /= 180;
-                        Rotation %= 2 * Math.PI;
-                        Rotation = Math.abs(Rotation - (2 * Math.PI));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
+                        texture.teleport(faceLocation(texture, player.getLocation()));
                     }
                     number++;
                 }else {
                     State = 2;
                     Animation(number);
                     cancel();
-                    return;
                 }
             }
         }.runTaskTimer(main, 0L, 1L);
@@ -151,9 +145,6 @@ public class MultireviveAnimation {
             @Override
             public void run() {
                 Location loc = player.getLocation();
-                if (maxRadius >= radius) {
-                    maxRadius = radius;
-                }
                 int nn = number - n;
                 if (State == 3) {
                     double RadiusChange = number * Math.PI;
@@ -182,24 +173,19 @@ public class MultireviveAnimation {
                         WinkelChange /= 90;
                         WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
                         WinkelChange %= 2 * Math.PI;
-                        double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
+                        double x = radius * RadiusChange * Math.sin(WinkelChange);
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
+                        double z = radius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        double Rotation = number * Math.PI;
-                        Rotation /= 180;
-                        Rotation %= 2 * Math.PI;
-                        Rotation = Math.abs(Rotation - (2 * Math.PI));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
+                        texture.teleport(faceLocation(texture, player.getLocation()));
                     }
                     number++;
                 }else {
                     State = 2;
                     Animation(number);
                     cancel();
-                    return;
                 }
             }
         }.runTaskTimer(main, 0L, 1L);
@@ -215,25 +201,17 @@ public class MultireviveAnimation {
                 Location loc = player.getLocation();
                 for (i = 0; i < TextureList.size(); i++) {
                     Entity texture = TextureList.get(i);
-                    double RadiusChange = number * Math.PI;
-                    RadiusChange /= 180;
-                    RadiusChange %= 2 * Math.PI;
-                    RadiusChange = Math.sin(RadiusChange);
                     double WinkelChange = number * Math.PI;
                     WinkelChange /= 90;
                     WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
                     WinkelChange %= 2 * Math.PI;
-                    double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
+                    double x = maxRadius * Math.sin(WinkelChange);
                     x += loc.getX();
                     double y = loc.getY() - 1;
-                    double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
+                    double z = maxRadius * Math.cos(WinkelChange);
                     z += loc.getZ();
                     texture.teleport(new Location(loc.getWorld(), x, y, z));
-                    double Rotation = number * Math.PI;
-                    Rotation /= 180;
-                    Rotation %= 2 * Math.PI;
-                    Rotation = Math.abs(Rotation - (2 * Math.PI));
-                    ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
+                    texture.teleport(faceLocation(texture, player.getLocation()));
                 }
                 number++;
                 if (State == 3) {
@@ -274,11 +252,7 @@ public class MultireviveAnimation {
                         double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        double Rotation = number * Math.PI;
-                        Rotation /= 180;
-                        Rotation %= 2 * Math.PI;
-                        Rotation = Math.abs(Rotation - (2 * Math.PI));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
+                        texture.teleport(faceLocation(texture, player.getLocation()));
                     }
                     number2++;
                     number--;
@@ -327,17 +301,13 @@ public class MultireviveAnimation {
                         WinkelChange /= 90;
                         WinkelChange += 2 * Math.PI * (i + 1) / TextureList.size();
                         WinkelChange %= 2 * Math.PI;
-                        double x = maxRadius * RadiusChange * Math.sin(WinkelChange);
+                        double x = radius * RadiusChange * Math.sin(WinkelChange);
                         x += loc.getX();
                         double y = loc.getY() - 1;
-                        double z = maxRadius * RadiusChange * Math.cos(WinkelChange);
+                        double z = radius * RadiusChange * Math.cos(WinkelChange);
                         z += loc.getZ();
                         texture.teleport(new Location(loc.getWorld(), x, y, z));
-                        double Rotation = number * Math.PI;
-                        Rotation /= 180;
-                        Rotation %= 2 * Math.PI;
-                        Rotation = Math.abs(Rotation - (2 * Math.PI));
-                        ((ArmorStand) texture).setHeadPose(new EulerAngle(0, Rotation, 0));
+                        texture.teleport(faceLocation(texture, player.getLocation()));
                     }
                     number2++;
                     number--;
@@ -448,6 +418,26 @@ public class MultireviveAnimation {
             TextureList.remove(i);
             i--;
         }
+    }
+
+    public Location faceLocation(Entity entity, Location to) {
+        if (entity.getWorld() != to.getWorld()) {
+            return null;
+        }
+        Location fromLocation = entity.getLocation();
+
+        double xDiff = to.getX() - fromLocation.getX();
+        double zDiff = to.getZ() - fromLocation.getZ();
+
+        double distanceXZ = Math.sqrt(xDiff * xDiff + zDiff * zDiff);
+
+        double yaw = Math.toDegrees(Math.acos(xDiff / distanceXZ));
+        if (zDiff < 0.0D) {
+            yaw += Math.abs(180.0D - yaw) * 2.0D;
+        }
+        Location loc = entity.getLocation();
+        loc.setYaw((float) (yaw - 90.0F));
+        return loc;
     }
 
     public void setState(int state) {

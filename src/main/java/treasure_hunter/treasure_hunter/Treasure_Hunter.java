@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import treasure_hunter.treasure_hunter.Commands.allCommand;
 import treasure_hunter.treasure_hunter.Commands.leaveCommand;
 import treasure_hunter.treasure_hunter.Commands.setupCommand;
+import treasure_hunter.treasure_hunter.Commands.startCommand;
 
 import java.util.Objects;
 
@@ -18,6 +19,7 @@ public final class Treasure_Hunter extends JavaPlugin {
     private final leaveCommand leaveCommand = new leaveCommand(this);
     private final setupCommand setupCommand = new setupCommand(this);
     private final allCommand allCommand = new allCommand(this);
+    private final startCommand startCommand = new startCommand(this);
     private final Queue queue = new Queue(this);
     private GameManager gameManager;
     private final MapManager mapManager = new MapManager(this);
@@ -45,6 +47,7 @@ public final class Treasure_Hunter extends JavaPlugin {
         Objects.requireNonNull(getCommand("leave")).setExecutor(leaveCommand);
         Objects.requireNonNull(getCommand("setup")).setExecutor(setupCommand);
         Objects.requireNonNull(getCommand("all")).setExecutor(allCommand);
+        Objects.requireNonNull(getCommand("start")).setExecutor(startCommand);
     }
 
     public void registerEvents() {

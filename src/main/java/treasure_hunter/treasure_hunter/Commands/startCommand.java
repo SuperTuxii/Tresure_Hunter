@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import treasure_hunter.treasure_hunter.Treasure_Hunter;
 
+import java.util.ArrayList;
+
 public class startCommand implements CommandExecutor {
     Treasure_Hunter main;
     public startCommand(Treasure_Hunter treasureHunter) {
@@ -19,7 +21,6 @@ public class startCommand implements CommandExecutor {
         if (sender instanceof Player && args.length != 0) {
             Player p = (Player) sender;
             int i;
-            int i2;
             ArrayList<String> PlayerList = new ArrayList<>();
             ArrayList<Player> GamePlayerList = new ArrayList<>();
             ArrayList<String> GamePlayerNameList = new ArrayList<>();
@@ -28,27 +29,35 @@ public class startCommand implements CommandExecutor {
             }
             if (!PlayerList.contains(p.getName())) {
                 p.sendMessage(format("&cDu bist in keiner Warteschlange!"));
-                return;
+                return true;
             }
+            GamePlayerList.add(p);
+            GamePlayerNameList.add(p.getName());
             for (i = 0; i < args.length; i++) {
+                if (GamePlayerNameList.contains(args[i])) {
+                    p.sendMessage(format("&cSpieler " + args[i] + " ist bereits einmal in der Liste"));
+                    return true;
+                }
                 if (PlayerList.contains(args[i])) {
-                    
+                    GamePlayerNameList.add(args[i]);
+                    GamePlayerList.add(Bukkit.getPlayerExact(args[i]));
                 }else {
-                    p.sendMessage(format("&cPlayer " + args[i] + "");
+                    p.sendMessage(format("&cSpieler " + args[i] + " nicht in der Warteschlange!"));
+                    return true;
                 }
             }
             int GameDataNumber = -1;
-                for (i = 0; i < main.getGameManager().getGameDataList().size(); i++) {
-                        if (main.getGameManager().getGameDataList().get(i).getGamestate() == 1) {
-                            GameDataNumber = i;
-                            break;
-                        }
-                    }
-                    if (GameDataNumber != -1) {
-                        ArrayList<Player> GamePlayerList = new ArrayList<>();
-                        
-                        main.getGameManager().startGame(GamePlayerList, GameDataNumber);
-                    } else {
+            for (i = 0; i < main.getGameManager().getGameDataList().size(); i++) {
+                if (main.getGameManager().getGameDataList().get(i).getGamestate() == 1) {
+                    GameDataNumber = i;
+                    break;
+                }
+            }
+            if (GameDataNumber != -1) {
+                main.getGameManager().startGame(GamePlayerList, GameDataNumber);
+            } else {
+                p.sendMessage(format("&c"));
+            }
         }
         return true;
     }
