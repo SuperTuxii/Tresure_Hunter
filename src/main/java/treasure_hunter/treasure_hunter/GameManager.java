@@ -949,7 +949,7 @@ public class GameManager implements Listener {
                         location.getBlock().getRelative(BlockFace.UP).getRelative(BlockFace.UP).setType(Material.REDSTONE_BLOCK);
                         p.teleport(location.add(0, 1, 0));
                         for (i = 0; i < GameDataList.get(GameDataNumber).getPlayerList().size(); i++) {
-                            GameDataList.get(GameDataNumber).getPlayerList().get(i).playSound(GameDataList.get(GameDataNumber).getPlayerList().get(i).getLocation(), Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 100, 0.25f);
+                            GameDataList.get(GameDataNumber).getPlayerList().get(i).playSound(GameDataList.get(GameDataNumber).getPlayerList().get(i).getLocation(), Sound.EVENT_RAID_HORN, SoundCategory.MASTER, 5, 0.25f);
                         }
                         for (i = 0; i < GameDataList.get(GameDataNumber).getRedPlayerList().size(); i++) {
                             Player player = Bukkit.getPlayer(GameDataList.get(GameDataNumber).getRedPlayerList().get(i));
