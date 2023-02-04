@@ -155,7 +155,7 @@ public class PreGameManager implements Listener {
     }
 
     public Inventory getMapChoosingInv(int time_in_seconds, int GameDataNumber) {
-        Inventory inventory = Bukkit.createInventory(new ChoosingHolder(), 27, "MapChoosing--------------" + time_in_seconds);
+        Inventory inventory = Bukkit.createInventory(new ChoosingHolder(), 27, "七七七七七七七七ㇺ" + time_in_seconds);
         inventory.setItem(0, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
         inventory.setItem(1, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
         inventory.setItem(2, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
