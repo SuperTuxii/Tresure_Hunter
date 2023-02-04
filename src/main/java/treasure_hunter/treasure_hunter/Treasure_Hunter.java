@@ -96,6 +96,7 @@ public final class Treasure_Hunter extends JavaPlugin {
         Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").setScore(1);
         Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").setScore(1);
         Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").setScore(1);
+        Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("CoinDropInterval").setScore(30);
         Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").setScore(0);
     }
 

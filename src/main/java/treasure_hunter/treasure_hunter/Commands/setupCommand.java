@@ -114,12 +114,21 @@ public class setupCommand implements CommandExecutor {
                         if (Integer.parseInt(args[6]) < 0) {
                             p.sendMessage(format("&cERROR: Amount can't be smaller than 0"));
                         }else if (Integer.parseInt(args[6]) < 60) {
-                            p.sendMessage(format("&6WARNING: Ship Ready Time should be at 60 seconds"));
+                            p.sendMessage(format("&6WARNING: Ship Ready Time should be at least 60 seconds"));
                             ShipReadyTime(Integer.parseInt(args[6]), p);
                         }else {
                             ShipReadyTime(Integer.parseInt(args[6]), p);
                         }
-                    }else if (args[2].equalsIgnoreCase("prices") && args[3].equalsIgnoreCase("set") && args.length == 10) {
+                    } else if (args[2].equalsIgnoreCase("coin") && args[3].equalsIgnoreCase("drop") && args[4].equalsIgnoreCase("interval") && args[5].equalsIgnoreCase("set") && args.length == 7) {
+                        if (Integer.parseInt(args[6]) <= 0) {
+                            p.sendMessage(format("&cERROR: Amount can't be smaller than 0"));
+                        }else if (Integer.parseInt(args[6]) < 5) {
+                            p.sendMessage(format("&6WARNING: Coin Drop Interval should be at least 5 seconds"));
+                            CoinDropInterval(Integer.parseInt(args[6]), p);
+                        }else {
+                            CoinDropInterval(Integer.parseInt(args[6]), p);
+                        }
+                    } else if (args[2].equalsIgnoreCase("prices") && args[3].equalsIgnoreCase("set") && args.length == 10) {
                         if (Integer.parseInt(args[4]) < 0 || Integer.parseInt(args[5]) < 0 || Integer.parseInt(args[6]) < 0 || Integer.parseInt(args[7]) < 0 || Integer.parseInt(args[8]) < 0  || Integer.parseInt(args[9]) < 0) {
                             p.sendMessage(format("&cERROR: Amount can't be smaller than 0"));
                         }else {
@@ -142,6 +151,8 @@ public class setupCommand implements CommandExecutor {
                             main.getMapManager().setTreasureSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), Integer.parseInt(args[11]), p);
                         }else if (args[4].equalsIgnoreCase("shop") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 11) {
                             main.getMapManager().setShopSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), p);
+                        }else if (args[4].equalsIgnoreCase("coin") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 11) {
+                            main.getMapManager().setCoinSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), p);
                         }
                     }else {
                         TreasureHunterHelp(p);
@@ -177,12 +188,14 @@ public class setupCommand implements CommandExecutor {
         p.sendMessage(format("&e/setup treasure hunter res radius set <time in seconds>: &fSets the radius in which a player can revive a corpse"));
         p.sendMessage(format("&e/setup treasure hunter ship ready time set <time in seconds>: &fSets the time the ship takes to get ready"));
         p.sendMessage(format("&e/setup treasure hunter prices set <Revolver Price> <Bullet Price> <Bullet Amount> <Medkit Price> <Ship Price> <Multirevive Price>: &fSets the prices in the shop"));
+        p.sendMessage(format("&e/setup treasure hunter coin drop interval set <time in seconds>: &fSets the interval the coins spawn at a random spawnpoint"));
         p.sendMessage(format("&e/setup treasure hunter add map: &fAdds a new Treasure Hunter Map"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> custommodeldata set <CustomModelData>: &fSets the CustomModelData for the preview item for the given Map"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> blue spawn set <x> <y> <z>: &fSets the Spawnpoint for Blue Team"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> red spawn set <x> <y> <z>: &fSets the Spawnpoint for Red Team"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> treasure spawn set <Spawn Number> <x> <y> <z> <rotation>: &fSets the specific treasure spawnpoint"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> shop spawn set <Shop Number> <x> <y> <z>: &fSets the specific shop spawnpoint"));
+        p.sendMessage(format("&e/setup treasure hunter map <Map Number> coin spawn set <Coin Spawn Number> <x> <y> <z>: &fSets the specific coin spawnpoint"));
     }
 
     public void GameInstances(int amount, Player p) {
@@ -281,6 +294,13 @@ public class setupCommand implements CommandExecutor {
          Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").setScore(MedkitPrice);
          Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").setScore(SchiffPrice);
          Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").setScore(MultirevivePrice);
+    }
+
+    public void CoinDropInterval(int time, Player p) {
+        if (p != null) {
+            p.sendMessage(format("&aCoin Drop Interval set to " + time + " seconds / " + time / 60 + "minutes"));
+        }
+        Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("CoinDropInterval").setScore(time);
     }
 
     public String format(String message) {

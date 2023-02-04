@@ -292,6 +292,11 @@ public class GameManager implements Listener {
                     checkForEnd(GameDataList.get(GameDataNumber));
                     double RoundTime = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RoundTime").getScore();
                     GameDataList.get(GameDataNumber).getGametimeBar().setProgress((1 / RoundTime) * number);
+                    if (number % Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("CoinDropInterval").getScore() == 2) {
+                        if (getRandomCoinNumber(GameDataList.get(GameDataNumber).getSelectedMapNumber()) != -1) {
+                            spawnCoin(getRandomCoinNumber(GameDataList.get(GameDataNumber).getSelectedMapNumber()), GameDataList.get(GameDataNumber).getSelectedMapNumber());
+                        }
+                    }
                     number--;
                 }else {
                     int i;
@@ -1022,6 +1027,33 @@ public class GameManager implements Listener {
         }.runTaskTimer(main, 0L, 20L);
     }
 
+    public int getRandomCoinNumber(int MapNumber) {
+        int i;
+        i = 1;
+        while (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "CoinSpawn" + i + "X").isScoreSet()) {
+            i++;
+        }
+        i--;
+        if (i == 0) {
+            return -1;
+        }else {
+            if (i == 1) {
+                return 1;
+            }else {
+                int CoinNumber = random.nextInt(i);
+                CoinNumber++;
+                return CoinNumber;
+            }
+        }
+    }
+
+    public void spawnCoin(int CoinNumber, int MapNumber) {
+        int x = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "CoinSpawn" + CoinNumber + "X").getScore();
+        int y = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "CoinSpawn" + CoinNumber + "Y").getScore();
+        int z = Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "CoinSpawn" + CoinNumber + "Z").getScore();
+        Objects.requireNonNull(Bukkit.getWorld("Map" + MapNumber)).dropItemNaturally(new Location(Bukkit.getWorld("Map" + MapNumber), x, y, z), itemManager.getCoin());
+    }
+
     @EventHandler
     public void onArrowHit(ProjectileHitEvent event) {
         if (event.getEntity() instanceof Arrow) {
@@ -1056,7 +1088,7 @@ public class GameManager implements Listener {
 
         if (!gameData.getTreasureStatusList().contains(true) && gameData.getSavedTreasure() == gameData.getTreasureNumberList().size()) {
             for (i2 = 0; i2 < gameData.getPlayerList().size(); i2++) {
-                gameData.getPlayerList().get(i2).sendTitle(format("&4Team Rot hat gewonnen"), format("&csie sind mit den Schatz entkommen!"), 20, 160, 20);
+                gameData.getPlayerList().get(i2).sendTitle(format("&4Team Rot hat gewonnen"), format("&csie sind mit dem Schatz entkommen!"), 20, 160, 20);
             }
             if (Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                 int pi;
@@ -1263,7 +1295,7 @@ public class GameManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
-        p.setResourcePack("https://www.udrop.com/file/7OOK/Server_Resourcepack_Plugin_(2).zip");
+        p.setResourcePack("https://www.udrop.com/file/7OP8/Server_Resourcepack_Plugin_(2).zip");
         int i;
         int i2;
         for (i = 0; i < GameDataList.size(); i++) {
