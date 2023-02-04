@@ -21,14 +21,12 @@ public class MultireviveAnimation {
     public Treasure_Hunter main;
 
     public MultireviveAnimation(Treasure_Hunter treasureHunter, GameData gameData, Player p) {
-        System.out.println("Animation created");
         main = treasureHunter;
         this.gameData = gameData;
         player = p;
         State = 1;
         createTextures();
         if (TotemCount != 0) {
-            System.out.println("Starting Animation");
             startAnimation();
             updateTotemCount();
         }
@@ -78,11 +76,9 @@ public class MultireviveAnimation {
                 entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING);
             }));
         }
-        System.out.println("createdTextures");
     }
 
     public void startAnimation() {
-        System.out.println("startAnimation");
         new BukkitRunnable() {
             int number = 0;
             int i;
@@ -130,7 +126,6 @@ public class MultireviveAnimation {
     }
 
     public void Animation(int n) {
-        System.out.println("Animation");
         new BukkitRunnable() {
             int number = n;
             int i;
@@ -169,7 +164,6 @@ public class MultireviveAnimation {
     }
 
     public void endAnimation(int n) {
-        System.out.println("EndAnimation");
         new BukkitRunnable() {
             int number = 40;
             int number2 = n;
