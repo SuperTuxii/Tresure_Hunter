@@ -93,7 +93,7 @@ public class PreGameManager implements Listener {
                 if (Objects.requireNonNull(gameManager.main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                     int pi;
                     for (pi = 0; pi < gameManager.getGameDataList().get(GameDataNumber).getPlayerList().size(); pi++) {
-                        gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Map Wahl Inventory Funktion gestartet"));
+                        gameManager.getGameDataList().get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Map Wahl Inventory Funktion gestartet" + getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size())));
                     }
                 }
                 if (number >= 0) {
@@ -176,6 +176,7 @@ public class PreGameManager implements Listener {
         inventory.setItem(17, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
         inventory.setItem(18, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
         if (getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size()) == 1) {
+            System.out.println("Pin1");
             inventory.setItem(19, getMapItemPin(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
         }else {
             inventory.setItem(19, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
@@ -183,6 +184,7 @@ public class PreGameManager implements Listener {
         inventory.setItem(20, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
         inventory.setItem(21, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
         if (getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size()) == 2) {
+            System.out.println("Pin2");
             inventory.setItem(22, getMapItemPin(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
         }else {
             inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
@@ -190,9 +192,10 @@ public class PreGameManager implements Listener {
         inventory.setItem(23, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
         inventory.setItem(24, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
         if (getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size()) == 3) {
+            System.out.println("Pin3");
             inventory.setItem(25, getMapItemPin(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
         }else {
-            inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+            inventory.setItem(25, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
         }
         inventory.setItem(26, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
         return inventory;
@@ -222,7 +225,6 @@ public class PreGameManager implements Listener {
     }
 
     public ItemStack getMapItemPin(int MapNumber) {
-
         ItemStack MapItem;
         MapItem = new ItemStack(Material.PAPER, 1);
         ItemMeta MapItemMeta = MapItem.getItemMeta();
