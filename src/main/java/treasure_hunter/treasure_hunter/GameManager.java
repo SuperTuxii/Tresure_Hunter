@@ -407,7 +407,7 @@ public class GameManager implements Listener {
     }
     
     public Inventory getShopInventory() {
-        Inventory inv = Bukkit.createInventory(new ShopHolder(), 18, format("&6Shop"));
+        Inventory inv = Bukkit.createInventory(new ShopHolder(), 18, format("&6Shop&f七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七\uE296"));
         inv.setItem(0, itemManager.getRevolver());
         inv.setItem(1, itemManager.getBullet(1));
         inv.setItem(2, itemManager.getMedkit());
