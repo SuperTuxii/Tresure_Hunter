@@ -175,13 +175,25 @@ public class PreGameManager implements Listener {
         inventory.setItem(16, getMapItem(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
         inventory.setItem(17, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
         inventory.setItem(18, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
-        inventory.setItem(19, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        if (getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size()) == 1) {
+            inventory.setItem(19, getMapItemPin(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        }else {
+            inventory.setItem(19, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1()));
+        }
         inventory.setItem(20, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber1(), GameDataNumber, 1));
         inventory.setItem(21, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
-        inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        if (getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size()) == 2) {
+            inventory.setItem(22, getMapItemPin(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        }else {
+            inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        }
         inventory.setItem(23, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2(), GameDataNumber, 2));
         inventory.setItem(24, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
-        inventory.setItem(25, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        if (getMostVotedMap(gameManager.getGameDataList().get(GameDataNumber).getMap1List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap2List().size(), gameManager.getGameDataList().get(GameDataNumber).getMap3List().size()) == 3) {
+            inventory.setItem(25, getMapItemPin(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3()));
+        }else {
+            inventory.setItem(22, getMapItemInvisible(gameManager.getGameDataList().get(GameDataNumber).getMapNumber2()));
+        }
         inventory.setItem(26, getMapItemInvisibleWithCount(gameManager.getGameDataList().get(GameDataNumber).getMapNumber3(), GameDataNumber, 3));
         return inventory;
     }
@@ -209,6 +221,18 @@ public class PreGameManager implements Listener {
         return MapItem;
     }
 
+    public ItemStack getMapItemPin(int MapNumber) {
+
+        ItemStack MapItem;
+        MapItem = new ItemStack(Material.PAPER, 1);
+        ItemMeta MapItemMeta = MapItem.getItemMeta();
+        assert MapItemMeta != null;
+        MapItemMeta.setDisplayName(format("&r" + gameManager.main.getMapManager().getMapName(MapNumber)));
+        MapItemMeta.setCustomModelData(2);
+        MapItem.setItemMeta(MapItemMeta);
+        return MapItem;
+    }
+
     public ItemStack getMapItemInvisibleWithCount(int MapNumber, int GameDataNumber, int Map) {
         int Map1 = gameManager.getGameDataList().get(GameDataNumber).getMap1List().size();
         int Map2 = gameManager.getGameDataList().get(GameDataNumber).getMap2List().size();
@@ -231,6 +255,27 @@ public class PreGameManager implements Listener {
         MapItemMeta.setCustomModelData(1);
         MapItem.setItemMeta(MapItemMeta);
         return MapItem;
+    }
+
+    public int getMostVotedMap(int Map1Size, int Map2Size, int Map3Size) {
+        if (Map1Size > Map2Size) {
+            if (Map1Size > Map3Size) {
+                return 1;
+            }else if (Map1Size < Map3Size) {
+                return 3;
+            }
+        }else if (Map1Size < Map2Size) {
+            if (Map2Size > Map3Size) {
+                return 2;
+            }else if (Map2Size < Map3Size) {
+                return 3;
+            }
+        }else {
+            if (Map3Size > Map1Size) {
+                return 3;
+            }
+        }
+        return 0;
     }
 
     public int[] choose3randomMaps() {

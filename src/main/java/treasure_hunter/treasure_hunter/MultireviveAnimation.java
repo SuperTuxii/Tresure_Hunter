@@ -223,7 +223,7 @@ public class MultireviveAnimation {
         int i2;
         ArrayList<Player> TotenList = getTotenList();
         for (i = 0; i < TotenList.size(); i++) {
-            TotenList.get(i).teleport(TextureList.get(i).getLocation());
+            TotenList.get(i).teleport(TextureList.get(i).getLocation().add(0, 1, 0));
             TotenList.get(i).playEffect(EntityEffect.TOTEM_RESURRECT);
             TotenList.get(i).setGameMode(GameMode.ADVENTURE);
             TotenList.get(i).setHealth(20);
