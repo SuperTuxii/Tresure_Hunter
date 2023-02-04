@@ -408,16 +408,16 @@ public class GameManager implements Listener {
     
     public Inventory getShopInventory() {
         Inventory inv = Bukkit.createInventory(new ShopHolder(), 18, format("&6Shop&f七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七\uE296"));
-        inv.setItem(0, itemManager.getRevolver());
-        inv.setItem(1, itemManager.getBullet(1));
-        inv.setItem(2, itemManager.getMedkit());
-        inv.setItem(3, itemManager.getSchiff());
-        inv.setItem(4, itemManager.getMultirevive());
-        inv.setItem(9, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore()));
-        inv.setItem(10, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore()));
-        inv.setItem(11, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore()));
-        inv.setItem(12, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore()));
-        inv.setItem(13, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore()));
+        inv.setItem(2, itemManager.getRevolver());
+        inv.setItem(3, itemManager.getBullet(1));
+        inv.setItem(4, itemManager.getMedkit());
+        inv.setItem(5, itemManager.getSchiff());
+        inv.setItem(6, itemManager.getMultirevive());
+        inv.setItem(11, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore()));
+        inv.setItem(12, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore()));
+        inv.setItem(13, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore()));
+        inv.setItem(14, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore()));
+        inv.setItem(15, itemManager.getCoins(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore()));
         return inv;
     }
 
@@ -436,7 +436,7 @@ public class GameManager implements Listener {
                             Player p = (Player) event.getWhoClicked();
                             if (event.getClickedInventory().getHolder() instanceof ShopHolder) {
                                 event.setCancelled(true);
-                                if (event.getSlot() == 0) {
+                                if (event.getSlot() == 2) {
                                     if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore())) {
                                         clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("RevolverPrice").getScore());
                                         HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getRevolver());
@@ -446,7 +446,7 @@ public class GameManager implements Listener {
                                             }
                                         }
                                     }
-                                } else if (event.getSlot() == 1) {
+                                } else if (event.getSlot() == 3) {
                                     if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore())) {
                                         clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletPrice").getScore());
                                         HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getBullet(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("BulletAmount").getScore()));
@@ -456,7 +456,7 @@ public class GameManager implements Listener {
                                             }
                                         }
                                     }
-                                } else if (event.getSlot() == 2) {
+                                } else if (event.getSlot() == 4) {
                                     if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore())) {
                                         clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MedkitPrice").getScore());
                                         HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getMedkit());
@@ -466,7 +466,7 @@ public class GameManager implements Listener {
                                             }
                                         }
                                     }
-                                } else if (event.getSlot() == 3) {
+                                } else if (event.getSlot() == 5) {
                                     if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore()) && GameDataList.get(i).getRedPlayerList().contains(p.getName())) {
                                         clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("SchiffPrice").getScore());
                                         HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getSchiff());
@@ -476,7 +476,7 @@ public class GameManager implements Listener {
                                             }
                                         }
                                     }
-                                } else if (event.getSlot() == 4) {
+                                } else if (event.getSlot() == 6) {
                                     if (p.getInventory().containsAtLeast(itemManager.getCoin(), Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore())) {
                                         clearCoins(p, Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("MultirevivePrice").getScore());
                                         HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getMultirevive());
@@ -486,7 +486,7 @@ public class GameManager implements Listener {
                                             }
                                         }
                                     }
-                                } else if (event.getSlot() == 5 && Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
+                                } else if (event.getSlot() == 7 && Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1) {
                                     HashMap<Integer, ItemStack> remainingItems = p.getInventory().addItem(itemManager.getCoins(64));
                                     if (!remainingItems.isEmpty()) {
                                         for (i3 = 0; i3 < remainingItems.size(); i3++) {
