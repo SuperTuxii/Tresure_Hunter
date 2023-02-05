@@ -94,6 +94,13 @@ public class MapManager {
         Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "CoinSpawn" + CoinNumber + "Z").setScore(z);
     }
 
+    public void setMap(int MapNumber, int CenterX, int CenterZ, int Scale, Player p) {
+        Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "MapCenterX").setScore(CenterX);
+        Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "MapCenterZ").setScore(CenterZ);
+        Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + MapNumber + "MapScale").setScore(Scale);
+        p.sendMessage(format("&aSet Map to " + CenterX + " " + CenterZ + " " + Scale));
+    }
+
 
     public String format(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);

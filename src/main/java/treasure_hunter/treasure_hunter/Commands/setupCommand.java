@@ -153,6 +153,8 @@ public class setupCommand implements CommandExecutor {
                             main.getMapManager().setShopSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), p);
                         }else if (args[4].equalsIgnoreCase("coin") && args[5].equalsIgnoreCase("spawn") && args[6].equalsIgnoreCase("set") && args.length == 11) {
                             main.getMapManager().setCoinSpawn(Integer.parseInt(args[3]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), Integer.parseInt(args[9]), Integer.parseInt(args[10]), p);
+                        }else if (args[4].equalsIgnoreCase("map") && args[5].equalsIgnoreCase("set") && args.length == 9) {
+                            main.getMapManager().setMap(Integer.parseInt(args[3]), Integer.parseInt(args[6]), Integer.parseInt(args[7]), Integer.parseInt(args[8]), p);
                         }
                     }else {
                         TreasureHunterHelp(p);
@@ -191,6 +193,7 @@ public class setupCommand implements CommandExecutor {
         p.sendMessage(format("&e/setup treasure hunter coin drop interval set <time in seconds>: &fSets the interval the coins spawn at a random spawnpoint"));
         p.sendMessage(format("&e/setup treasure hunter add map: &fAdds a new Treasure Hunter Map"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> custommodeldata set <CustomModelData>: &fSets the CustomModelData for the preview item for the given Map"));
+        p.sendMessage(format("&e/setup treasure hunter map <Map Number> map set <CenterX> <CenterZ> <Scale>: &fSets options for the Map for the given Map"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> blue spawn set <x> <y> <z>: &fSets the Spawnpoint for Blue Team"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> red spawn set <x> <y> <z>: &fSets the Spawnpoint for Red Team"));
         p.sendMessage(format("&e/setup treasure hunter map <Map Number> treasure spawn set <Spawn Number> <x> <y> <z> <rotation>: &fSets the specific treasure spawnpoint"));

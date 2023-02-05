@@ -20,6 +20,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -252,6 +254,32 @@ public class GameManager implements Listener {
                     GameDataList.get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Treasure: TSL" + i2 + GameDataList.get(GameDataNumber).getTreasureStatusList().get(i2)));
                     GameDataList.get(GameDataNumber).getPlayerList().get(pi).sendMessage(format("&6Debug: Treasure: POS" + i2 + x + " " + y + " " + z + " " + r));
                 }
+            }
+            for (i = 0; i < GameDataList.get(GameDataNumber).getBluePlayerList().size(); i++) {
+                Player p = Bukkit.getPlayerExact(GameDataList.get(GameDataNumber).getBluePlayerList().get(i));
+                ItemStack Item = new ItemStack(Material.FILLED_MAP, 1);
+                MapMeta ItemMeta = (MapMeta) Item.getItemMeta();
+                assert ItemMeta != null;
+                MapView MapView = ItemMeta.getMapView();
+                assert MapView != null;
+                MapView.setCenterX(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore());
+                MapView.setCenterZ(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterZ").getScore());
+                if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 1)) {
+                    MapView.setScale(org.bukkit.map.MapView.Scale.CLOSEST);
+                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 2)) {
+                    MapView.setScale(org.bukkit.map.MapView.Scale.CLOSE);
+                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 3)) {
+                    MapView.setScale(org.bukkit.map.MapView.Scale.NORMAL);
+                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 4)) {
+                    MapView.setScale(org.bukkit.map.MapView.Scale.FAR);
+                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 5)) {
+                    MapView.setScale(org.bukkit.map.MapView.Scale.FARTHEST);
+                }
+                System.out.println(MapView.getRenderers());
+                ItemMeta.setMapView(MapView);
+                Item.setItemMeta(ItemMeta);
+                assert p != null;
+                p.getInventory().setItem(8, Item);
             }
         }
 
