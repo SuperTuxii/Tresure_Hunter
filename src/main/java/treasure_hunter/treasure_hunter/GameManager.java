@@ -264,6 +264,7 @@ public class GameManager implements Listener {
                 MapView.getRenderers().clear();
                 MapView.addRenderer(new MapMapRenderer(main));
                 ItemMeta.setMapView(MapView);
+                ItemMeta.setDisplayName(format("&rSchatzkarte"));
                 Item.setItemMeta(ItemMeta);
                 assert p != null;
                 p.getInventory().setItem(8, Item);
