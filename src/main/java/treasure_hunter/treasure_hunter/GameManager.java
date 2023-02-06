@@ -260,22 +260,9 @@ public class GameManager implements Listener {
                 ItemStack Item = new ItemStack(Material.FILLED_MAP, 1);
                 MapMeta ItemMeta = (MapMeta) Item.getItemMeta();
                 assert ItemMeta != null;
-                MapView MapView = ItemMeta.getMapView();
-                assert MapView != null;
-                MapView.setCenterX(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore());
-                MapView.setCenterZ(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterZ").getScore());
-                if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 1)) {
-                    MapView.setScale(org.bukkit.map.MapView.Scale.CLOSEST);
-                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 2)) {
-                    MapView.setScale(org.bukkit.map.MapView.Scale.CLOSE);
-                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 3)) {
-                    MapView.setScale(org.bukkit.map.MapView.Scale.NORMAL);
-                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 4)) {
-                    MapView.setScale(org.bukkit.map.MapView.Scale.FAR);
-                }else if ((Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber() + "MapCenterX").getScore() == 5)) {
-                    MapView.setScale(org.bukkit.map.MapView.Scale.FARTHEST);
-                }
-                System.out.println(MapView.getRenderers());
+                MapView MapView = Bukkit.createMap(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber()));
+                MapView.getRenderers().clear();
+                MapView.addRenderer(new MapMapRenderer(main));
                 ItemMeta.setMapView(MapView);
                 Item.setItemMeta(ItemMeta);
                 assert p != null;
