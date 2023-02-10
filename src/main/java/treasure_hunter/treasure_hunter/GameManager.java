@@ -260,7 +260,7 @@ public class GameManager implements Listener {
                 ItemStack Item = new ItemStack(Material.FILLED_MAP, 1);
                 MapMeta ItemMeta = (MapMeta) Item.getItemMeta();
                 assert ItemMeta != null;
-                MapView MapView = Bukkit.createMap(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber()));
+                MapView MapView = Bukkit.createMap(Objects.requireNonNull(Bukkit.getWorld("Map" + GameDataList.get(GameDataNumber).getSelectedMapNumber())));
                 MapView.getRenderers().clear();
                 MapView.addRenderer(new MapMapRenderer(main));
                 ItemMeta.setMapView(MapView);

@@ -2,10 +2,12 @@ package treasure_hunter.treasure_hunter;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,6 +25,46 @@ public class Queue implements Listener {
     public ArrayList<Player> PlayerList = new ArrayList<>();
 
     private boolean WaitingforFreeGame = false;
+
+    @EventHandler
+    public void onInteract(PlayerInteractAtEntityEvent event) {
+        Player p = event.getPlayer();
+        Entity entity = event.getRightClicked();
+        if (entity.getScoreboardTags().contains("warteschlange")) {
+            int i;
+            if (!(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1)) {
+                for (i = 0; i < PlayerList.size(); i++) {
+                    if (PlayerList.get(i).getName().equals(p.getName())) {
+                        PlayerList.remove(i);
+                    }
+                }
+            }
+            PlayerList.add(p);
+            p.sendMessage(format("&aDu bist nun in der Warteschlange!"));
+            if (PlayerList.size() >= Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TeamSize").getScore() * 2) {
+                int GameDataNumber = -1;
+                for (i = 0; i < main.getGameManager().getGameDataList().size(); i++) {
+                    if (main.getGameManager().getGameDataList().get(i).getGamestate() == 1) {
+                        GameDataNumber = i;
+                        break;
+                    }
+                }
+                if (GameDataNumber != -1) {
+                    ArrayList<Player> GamePlayerList = new ArrayList<>();
+                    while (GamePlayerList.size() != Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("TeamSize").getScore() * 2) {
+                        GamePlayerList.add(PlayerList.get(0));
+                        PlayerList.remove(0);
+                    }
+                    main.getGameManager().startGame(GamePlayerList, GameDataNumber);
+                } else {
+                    if (!WaitingforFreeGame) {
+                        WaitingforFreeGame = true;
+                        WaitingforFreeGame();
+                    }
+                }
+            }
+        }
+    }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
