@@ -1312,7 +1312,7 @@ public class GameManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
-        p.setResourcePack("https://www.udrop.com/file/7Q5g/Server_Resourcepack_Plugin_(2).zip");
+        p.setResourcePack("https://www.udrop.com/file/7Q5h/Server_Resourcepack_Plugin_(2).zip");
         int i;
         int i2;
         for (i = 0; i < GameDataList.size(); i++) {
