@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
@@ -1311,7 +1312,7 @@ public class GameManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
-        p.setResourcePack("https://www.udrop.com/file/7OP8/Server_Resourcepack_Plugin_(2).zip");
+        p.setResourcePack("https://www.udrop.com/file/7Q5g/Server_Resourcepack_Plugin_(2).zip");
         int i;
         int i2;
         for (i = 0; i < GameDataList.size(); i++) {
@@ -1388,6 +1389,15 @@ public class GameManager implements Listener {
     public void MultireviveNotInHandCheck(MultireviveAnimation mA) {
         if (!mA.getPlayer().getInventory().getItemInMainHand().isSimilar(itemManager.getMultirevive()) && !mA.getPlayer().getInventory().getItemInOffHand().isSimilar(itemManager.getMultirevive())) {
             mA.setState(3);
+        }
+    }
+
+    @EventHandler
+    public void OnPickup(EntityPickupItemEvent event) {
+        if (event.getEntity() instanceof Player) {
+            if (event.getItem().getItemStack().isSimilar(itemManager.getCoin())) {
+                ((Player) event.getEntity()).playSound(event.getEntity().getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1, 1);
+            }
         }
     }
 
