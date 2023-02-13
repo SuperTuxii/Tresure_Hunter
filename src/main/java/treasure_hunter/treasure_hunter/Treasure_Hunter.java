@@ -2,6 +2,7 @@ package treasure_hunter.treasure_hunter;
 
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,11 +44,15 @@ public final class Treasure_Hunter extends JavaPlugin {
     }
 
     public void spawnNPCArmorstands() {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kill @e[tag=warteschlange]");
         World world = Bukkit.getWorlds().get(0);
         int x = Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignX").getScore();
         int y = Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignY").getScore();
         int z = Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignZ").getScore();
+        for (Entity entity : world.getEntities()) {
+            if (entity.getScoreboardTags().contains("warteschlange")) {
+                entity.remove();
+            }
+        }
         world.spawn(new Location(world, x + 0.4, y, z + 0.4), ArmorStand.class, entity -> {
             entity.setGravity(false);
             entity.setInvulnerable(true);
@@ -104,12 +109,14 @@ public final class Treasure_Hunter extends JavaPlugin {
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING);
         });
-        world.spawn(new Location(world, x + 0.6, y, z + 0.6), ArmorStand.class, entity -> {
+        world.spawn(new Location(world, x + 0.6, y + 0.1, z + 0.6), ArmorStand.class, entity -> {
             entity.setGravity(false);
             entity.setInvulnerable(true);
             entity.setVisible(false);
             entity.setSilent(true);
             entity.addScoreboardTag("warteschlange");
+            entity.setCustomNameVisible(true);
+            entity.setCustomName(format("&bWarteschlange"));
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
