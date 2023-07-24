@@ -49,16 +49,16 @@ public final class Treasure_Hunter extends JavaPlugin {
         int y = Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignY").getScore();
         int z = Objects.requireNonNull(mainScoreboard.getObjective("CTreasureHunter")).getScore("QueueSignZ").getScore();
         for (Entity entity : world.getEntities()) {
-            if (entity.getScoreboardTags().contains("warteschlange")) {
+            if (entity.getScoreboardTags().contains("warteschlange_treasure_hunter")) {
                 entity.remove();
             }
         }
-        world.spawn(new Location(world, x + 0.4, y, z + 0.4), ArmorStand.class, entity -> {
+        world.spawn(new Location(world, x + 0.4, y - 1, z + 0.4), ArmorStand.class, entity -> {
             entity.setGravity(false);
             entity.setInvulnerable(true);
             entity.setVisible(false);
             entity.setSilent(true);
-            entity.addScoreboardTag("warteschlange");
+            entity.addScoreboardTag("warteschlange_treasure_hunter");
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
@@ -72,12 +72,12 @@ public final class Treasure_Hunter extends JavaPlugin {
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING);
         });
-        world.spawn(new Location(world, x + 0.6, y, z + 0.4), ArmorStand.class, entity -> {
+        world.spawn(new Location(world, x + 0.6, y - 1, z + 0.4), ArmorStand.class, entity -> {
             entity.setGravity(false);
             entity.setInvulnerable(true);
             entity.setVisible(false);
             entity.setSilent(true);
-            entity.addScoreboardTag("warteschlange");
+            entity.addScoreboardTag("warteschlange_treasure_hunter");
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
@@ -90,12 +90,12 @@ public final class Treasure_Hunter extends JavaPlugin {
             entity.addEquipmentLock(EquipmentSlot.LEGS, ArmorStand.LockType.REMOVING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING);
-        });world.spawn(new Location(world, x + 0.4, y, z + 0.6), ArmorStand.class, entity -> {
+        });world.spawn(new Location(world, x + 0.4, y - 1, z + 0.6), ArmorStand.class, entity -> {
             entity.setGravity(false);
             entity.setInvulnerable(true);
             entity.setVisible(false);
             entity.setSilent(true);
-            entity.addScoreboardTag("warteschlange");
+            entity.addScoreboardTag("warteschlange_treasure_hunter");
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.REMOVING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.OFF_HAND, ArmorStand.LockType.ADDING_OR_CHANGING);
@@ -109,12 +109,12 @@ public final class Treasure_Hunter extends JavaPlugin {
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.ADDING_OR_CHANGING);
             entity.addEquipmentLock(EquipmentSlot.FEET, ArmorStand.LockType.REMOVING_OR_CHANGING);
         });
-        world.spawn(new Location(world, x + 0.6, y + 0.1, z + 0.6), ArmorStand.class, entity -> {
+        world.spawn(new Location(world, x + 0.6, y - 0.9, z + 0.6), ArmorStand.class, entity -> {
             entity.setGravity(false);
             entity.setInvulnerable(true);
             entity.setVisible(false);
             entity.setSilent(true);
-            entity.addScoreboardTag("warteschlange");
+            entity.addScoreboardTag("warteschlange_treasure_hunter");
             entity.setCustomNameVisible(true);
             entity.setCustomName(format("&bWarteschlange"));
             entity.addEquipmentLock(EquipmentSlot.HAND, ArmorStand.LockType.ADDING_OR_CHANGING);

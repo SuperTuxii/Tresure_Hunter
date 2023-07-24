@@ -30,7 +30,7 @@ public class Queue implements Listener {
     public void onInteract(PlayerInteractAtEntityEvent event) {
         Player p = event.getPlayer();
         Entity entity = event.getRightClicked();
-        if (entity.getScoreboardTags().contains("warteschlange")) {
+        if (entity.getScoreboardTags().contains("warteschlange_treasure_hunter")) {
             int i;
             if (!(Objects.requireNonNull(main.mainScoreboard.getObjective("CTreasureHunter")).getScore("DebugMode").getScore() == 1)) {
                 for (i = 0; i < PlayerList.size(); i++) {
